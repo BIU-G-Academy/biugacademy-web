@@ -1,0 +1,33 @@
+(node:76967) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ S1 health reports configured (9555.626683ms)
+✔ S2 valid application is stored with contact fields encrypted (1964.330413ms)
+✔ S3 duplicate contact is acknowledged but not stored twice (3338.246705ms)
+✔ S4 minor (16-17) accepted only with guardian consent (57.045407ms)
+✔ S5 support message stored encrypted (1710.699212ms)
+✔ S6 CORS preflight for allowed origin (15.010565ms)
+✔ F1 missing consent rejected, nothing stored (3357.432779ms)
+✔ F2 invalid fields rejected with field list (25.483899ms)
+✔ F3 no contact channel rejected (24.10861ms)
+✔ F4 honeypot: bot gets fake success, nothing stored (3001.134942ms)
+✔ F5 missing Turnstile token rejected (23.280429ms)
+✔ F6 Turnstile siteverify failure rejected (always-fail test secret) (1655.626705ms)
+✔ F7 foreign origin rejected (POST and preflight) (21.64836ms)
+✔ F8 wrong content type, oversize body, malformed JSON (19.09796ms)
+✔ F9 rate limit: 4th request in the hour gets 429 (27.639067ms)
+✔ F10 plain HTTP rejected when not explicitly allowed (1436.773279ms)
+✔ F11 unknown route 404, GET on POST route 404 (52.455807ms)
+✔ A1 admin rejects missing/wrong token; disabled when no token configured (17.023619ms)
+✔ A2 admin export decrypts (JSON + CSV) and is audit-logged (1541.81993ms)
+✔ D1 deletion request -> admin erase -> data gone, request completed (3085.139253ms)
+✔ D2 privacy request for unknown contact gets the same 202 (no enumeration) (33.338394ms)
+✔ R1 retention purge deletes expired records only (4647.369347ms)
+✔ R2 daily cron trigger runs the same purge (5900.008949ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 43993.453279
