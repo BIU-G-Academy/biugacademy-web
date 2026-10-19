@@ -14,9 +14,6 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - `robots.txt` and `sitemap.xml`; self-referencing `<link rel="canonical">` on primary pages
 - Opt-in analytics loader (Cloudflare Web Analytics or GA4) that stays disabled until a token or measurement ID is configured; no token is committed
-
-### Added
-
 - Institutional documentation taxonomy: partnerships, governance, metrics, branding, i18n
 - Root `ARCHITECTURE.md` with system overview and Mermaid diagrams
 - `docs/operations/deployment-guide.md` and `docs/operations/pdf-export-pipeline.md`
