@@ -61,60 +61,108 @@
       <section class="section section-light">
         <div class="section-inner">
           <div class="waitlist-wrap">
-            <form
-              action="https://formsubmit.co/support@biugacademy.org"
-              method="POST"
-              data-intake-form="waitlist"
-            >
-              <input type="hidden" name="source_platform" value="biugacademy-web" />
-              <input type="hidden" name="browser_language" value="" />
-              <input type="hidden" name="timezone" value="" />
+            <form method="POST" data-intake-form="waitlist" novalidate>
+              <p class="form-intro">
+                We only ask for the essentials at this stage. More information is requested only if
+                you are selected.
+              </p>
+              <input type="hidden" name="consent_version" value="2026-10-19" />
+              <input type="hidden" name="form_language" value="en" />
               <input type="hidden" name="referral_source" value="" />
-              <input type="hidden" name="submission_timestamp" value="" />
               <div style="position: absolute; left: -9999px" aria-hidden="true">
                 <label for="website">Do not fill this field</label>
                 <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
               </div>
 
               <div class="form-group" data-field="full_name">
-                <label for="full_name">Full name <span class="req">*</span></label>
-                <input id="full_name" name="full_name" type="text" autocomplete="name" required />
+                <label for="full_name"
+                  >Full name <span class="req" aria-label="required">*</span></label
+                >
+                <input
+                  id="full_name"
+                  name="full_name"
+                  type="text"
+                  autocomplete="name"
+                  maxlength="100"
+                  required
+                />
               </div>
+              <p class="form-hint" id="contact-hint">Give at least one contact: email or phone.</p>
               <div class="form-group" data-field="email">
-                <label for="email">Email <span class="req">*</span></label>
-                <input id="email" name="email" type="email" autocomplete="email" required />
+                <label for="email">Email</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  maxlength="254"
+                  aria-describedby="contact-hint"
+                />
               </div>
               <div class="form-group" data-field="phone_number">
-                <label for="phone_number">Primary phone <span class="req">*</span></label>
+                <label for="phone_number">Phone</label>
                 <input
                   id="phone_number"
                   name="phone_number"
                   type="tel"
                   inputmode="tel"
                   autocomplete="tel"
-                  required
+                  maxlength="25"
+                  placeholder="+244 9XX XXX XXX"
+                  aria-describedby="contact-hint"
                 />
+                <label class="checkbox-row"
+                  ><input type="checkbox" name="phone_has_whatsapp" value="yes" /><span
+                    >This number has WhatsApp</span
+                  ></label
+                >
               </div>
-              <div class="form-group" data-field="whatsapp_number">
-                <label for="whatsapp_number">WhatsApp (optional)</label>
-                <input
-                  id="whatsapp_number"
-                  name="whatsapp_number"
-                  type="tel"
-                  inputmode="tel"
-                  autocomplete="tel"
-                />
+              <div class="form-group" data-field="preferred_contact">
+                <label for="preferred_contact"
+                  >How would you like to be contacted? (optional)</label
+                >
+                <select id="preferred_contact" name="preferred_contact">
+                  <option value="">Select</option>
+                  <option value="whatsapp">WhatsApp</option>
+                  <option value="sms">SMS</option>
+                  <option value="call">Phone call</option>
+                  <option value="email">Email</option>
+                </select>
               </div>
               <div class="form-group" data-field="province">
-                <label for="province">Province <span class="req">*</span></label>
-                <input id="province" name="province" type="text" required />
-              </div>
-              <div class="form-group" data-field="municipality">
-                <label for="municipality">Municipality <span class="req">*</span></label>
-                <input id="municipality" name="municipality" type="text" required />
+                <label for="province"
+                  >Province <span class="req" aria-label="required">*</span></label
+                >
+                <select id="province" name="province" required>
+                  <option value="">Select</option>
+                  <option value="Bengo">Bengo</option>
+                  <option value="Benguela">Benguela</option>
+                  <option value="Bié">Bié</option>
+                  <option value="Cabinda">Cabinda</option>
+                  <option value="Cuando">Cuando</option>
+                  <option value="Cubango">Cubango</option>
+                  <option value="Cuanza Norte">Cuanza Norte</option>
+                  <option value="Cuanza Sul">Cuanza Sul</option>
+                  <option value="Cunene">Cunene</option>
+                  <option value="Huambo">Huambo</option>
+                  <option value="Huíla">Huíla</option>
+                  <option value="Icolo e Bengo">Icolo e Bengo</option>
+                  <option value="Luanda">Luanda</option>
+                  <option value="Lunda Norte">Lunda Norte</option>
+                  <option value="Lunda Sul">Lunda Sul</option>
+                  <option value="Malanje">Malanje</option>
+                  <option value="Moxico">Moxico</option>
+                  <option value="Moxico Leste">Moxico Leste</option>
+                  <option value="Namibe">Namibe</option>
+                  <option value="Uíge">Uíge</option>
+                  <option value="Zaire">Zaire</option>
+                  <option value="Outside Angola">Outside Angola</option>
+                </select>
               </div>
               <div class="form-group" data-field="age_range">
-                <label for="age_range">Age range <span class="req">*</span></label>
+                <label for="age_range"
+                  >Age range <span class="req" aria-label="required">*</span></label
+                >
                 <select id="age_range" name="age_range" required>
                   <option value="">Select</option>
                   <option value="16-17">16-17</option>
@@ -124,29 +172,45 @@
                   <option value="45+">45+</option>
                 </select>
               </div>
+              <div class="form-group" data-field="guardian_consent" hidden>
+                <label class="checkbox-row"
+                  ><input type="checkbox" name="guardian_consent" value="yes" /><span
+                    >I am 16 or 17 and my parent or legal guardian authorises this application and
+                    the processing of this data.</span
+                  ></label
+                >
+              </div>
               <div class="form-group" data-field="primary_language">
-                <label for="primary_language">Primary language <span class="req">*</span></label>
+                <label for="primary_language"
+                  >Main language <span class="req" aria-label="required">*</span></label
+                >
                 <select id="primary_language" name="primary_language" required>
                   <option value="">Select</option>
                   <option value="Portuguese">Portuguese</option>
+                  <option value="Umbundu">Umbundu</option>
+                  <option value="Kimbundu">Kimbundu</option>
+                  <option value="Kikongo">Kikongo</option>
+                  <option value="Chokwe">Chokwe</option>
                   <option value="English">English</option>
                   <option value="French">French</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
               <div class="form-group" data-field="education_level">
-                <label for="education_level">Education level <span class="req">*</span></label>
+                <label for="education_level"
+                  >Education level <span class="req" aria-label="required">*</span></label
+                >
                 <select id="education_level" name="education_level" required>
                   <option value="">Select</option>
                   <option value="Primary">Primary</option>
                   <option value="Secondary">Secondary</option>
-                  <option value="Technical">Technical</option>
+                  <option value="Technical">Technical / vocational</option>
                   <option value="University">University</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
-
-              <div class="form-group" data-field="areas_of_interest">
-                <span>Areas of interest <span class="req">*</span></span>
+              <fieldset class="form-group" data-field="areas_of_interest">
+                <legend>Areas of interest <span class="req" aria-label="required">*</span></legend>
                 <label class="checkbox-row"
                   ><input
                     type="checkbox"
@@ -169,19 +233,10 @@
                     >Technical careers</span
                   ></label
                 >
-              </div>
-
-              <div class="form-group" data-field="technical_background">
-                <label for="technical_background"
-                  >Current technical background <span class="req">*</span></label
-                >
-                <textarea id="technical_background" name="technical_background" required></textarea>
-              </div>
+              </fieldset>
               <div class="form-group" data-field="internet_access_level">
-                <label for="internet_access_level"
-                  >Internet access <span class="req">*</span></label
-                >
-                <select id="internet_access_level" name="internet_access_level" required>
+                <label for="internet_access_level">Internet access (optional)</label>
+                <select id="internet_access_level" name="internet_access_level">
                   <option value="">Select</option>
                   <option value="Stable home internet">Stable home internet</option>
                   <option value="Mobile data only">Mobile data only</option>
@@ -190,53 +245,25 @@
                 </select>
               </div>
               <div class="form-group" data-field="device_access">
-                <label for="device_access">Primary device <span class="req">*</span></label>
-                <select id="device_access" name="device_access" required>
+                <label for="device_access">Main device (optional)</label>
+                <select id="device_access" name="device_access">
                   <option value="">Select</option>
                   <option value="Smartphone only">Smartphone only</option>
-                  <option value="Smartphone + laptop">Smartphone + laptop</option>
-                  <option value="Shared computer access">Shared computer access</option>
+                  <option value="Smartphone + laptop">Smartphone + computer</option>
+                  <option value="Shared computer access">Shared computer</option>
                   <option value="No personal device">No personal device</option>
                 </select>
               </div>
-              <div class="form-group" data-field="employment_status">
-                <label for="employment_status">Employment status <span class="req">*</span></label>
-                <select id="employment_status" name="employment_status" required>
-                  <option value="">Select</option>
-                  <option value="Student">Student</option>
-                  <option value="Seeking employment">Seeking employment</option>
-                  <option value="Informal worker">Informal worker</option>
-                  <option value="Employed">Employed</option>
-                  <option value="Self-employed">Self-employed</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="linkedin_optional">LinkedIn (optional)</label>
-                <input id="linkedin_optional" name="linkedin_optional" type="url" />
-              </div>
-              <div class="form-group">
-                <label for="github_optional">GitHub (optional)</label>
-                <input id="github_optional" name="github_optional" type="url" />
-              </div>
-              <div class="form-group" data-field="motivation_statement">
-                <label for="motivation_statement"
-                  >Motivation statement <span class="req">*</span></label
-                >
-                <textarea
-                  id="motivation_statement"
-                  name="motivation_statement"
-                  minlength="20"
-                  required
-                ></textarea>
-              </div>
-              <div class="form-group" data-field="consent_checkbox">
+              <div class="form-group" data-field="consent_privacy">
                 <label class="checkbox-row"
-                  ><input type="checkbox" name="consent_checkbox" value="yes" required /><span
-                    >I consent to educational-use processing of this application data by BIU.G
-                    Academy.</span
+                  ><input type="checkbox" name="consent_privacy" value="yes" required /><span
+                    >I have read the <a href="/en/privacy/">Privacy Notice</a> and authorise BIU.G
+                    Academy to process this data to assess my application and contact me about the
+                    first cohort, including storing it on Cloudflare servers outside Angola.</span
                   ></label
                 >
               </div>
+              <div class="biug-turnstile" data-turnstile-slot></div>
               <p id="form-message" class="form-message" aria-live="polite"></p>
               <button type="submit" class="btn btn-primary form-submit-btn">
                 Submit application
@@ -262,6 +289,7 @@
           <p class="footer-tag">Practical, Angola-first learning for real-life progress.</p>
         </div>
         <nav class="footer-links" aria-label="Footer">
+          <a href="/en/privacy/">Privacy</a>
           <a href="/en/">Home</a>
           <a href="/en/how-it-works/">How it works</a>
           <a href="/en/about/">About</a>

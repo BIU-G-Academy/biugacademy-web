@@ -1,0 +1,7 @@
+PASS | B1 fail-closed when intake is not configured: nothing is sent
+PASS | B2 happy path (PT): Turnstile token, POST to Worker, redirect, row stored
+PASS | B3 client-side: no contact -> message, no POST
+PASS | B4 minor: guardian checkbox appears and is required
+PASS | B5 server rejection (Turnstile fails server-side) shows error, stays on page
+PASS | B6 privacy page: deletion request accepted with reference
+PASS | B7 legacy FormSubmit pages now redirect (no third-party form left)

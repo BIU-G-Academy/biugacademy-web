@@ -1,0 +1,19 @@
+{
+  "name": "biug-academy-intake-worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "First-party, privacy-preserving intake API for BIU.G Academy (Cloudflare Worker + D1 + Turnstile).",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --local",
+    "migrate:local": "wrangler d1 migrations apply biug-academy-intake --local",
+    "test:unit": "node --test test/unit.test.mjs",
+    "test:e2e": "node --test --test-concurrency=1 test/e2e.test.mjs",
+    "test:browser": "node test/browser.e2e.mjs",
+    "test": "npm run test:unit && npm run test:e2e"
+  },
+  "devDependencies": {
+    "puppeteer-core": "24.43.1",
+    "wrangler": "4.151.2"
+  }
+}

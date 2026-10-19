@@ -60,7 +60,7 @@ Sensitive handling expectations:
 
 ## Retention preparation
 
-Retention policy is under development. Proposed direction:
+Retention for the first-party intake is defined in [../operations/intake-first-party.md](../operations/intake-first-party.md#retention) (applications 12 months, support 6 months, privacy-request records 24 months). General direction for other records:
 
 - Keep active intake records for cohort cycles
 - Archive or delete stale records based on operational need and legal guidance

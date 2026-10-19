@@ -8,6 +8,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- First-party intake (D-015): `intake-worker/` Cloudflare Worker + D1 + Turnstile with encrypted contact fields, retention cron, deletion-request path and token/Access-protected admin export; tests in `intake-worker/test/`
+- Privacy notices in PT/EN/FR (`/pt/privacidade/`, `/en/privacy/`, `/fr/confidentialite/`) with a deletion/access request form
+- `docs/operations/intake-first-party.md` runbook
+
 - Institutional documentation taxonomy: partnerships, governance, metrics, branding, i18n
 - Root `ARCHITECTURE.md` with system overview and Mermaid diagrams
 - `docs/operations/deployment-guide.md` and `docs/operations/pdf-export-pipeline.md`
@@ -22,6 +26,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `docs/operations/backend-deployment.md` — API production deployment guide
 
 ### Changed
+
+- Application forms (PT/EN/FR and `/apply/`) reduced to minimal first-stage data with explicit consent and guardian authorisation for ages 16-17; forms fail closed until the intake API is configured
+- Legacy `pt|en|fr/waitlist.html` pages that posted to FormSubmit now redirect to the current forms
 
 - `README.md`, `ROADMAP.md`, `CONTRIBUTING.md`, `GOVERNANCE.md`, `SECURITY.md` — institutional upgrade
 - Roadmap rephased to Phases 0–6 (website → partnerships)

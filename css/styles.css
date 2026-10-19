@@ -1042,3 +1042,46 @@ details.form-extra summary:focus-visible {
     scroll-margin-top: 80px;
   }
 }
+
+/* First-party intake (D-015) */
+.form-intro,
+.form-hint {
+  font-size: 0.92rem;
+  color: #555;
+  margin: 0 0 12px;
+}
+fieldset.form-group {
+  border: 0;
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+fieldset.form-group legend {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.form-group[hidden] {
+  display: none;
+}
+.biug-turnstile {
+  margin: 12px 0;
+  min-height: 65px;
+}
+.biug-support-consent {
+  display: flex !important;
+  gap: 6px;
+  align-items: flex-start;
+  font-weight: 400 !important;
+}
+.biug-support-consent input {
+  width: auto !important;
+  margin-top: 3px;
+}
+.privacy-notice h2 {
+  font-size: 1.15rem;
+  margin: 28px 0 8px;
+}
+.privacy-notice p,
+.privacy-notice li {
+  line-height: 1.6;
+}
