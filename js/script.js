@@ -1,9 +1,15 @@
 /**
  * BIU.G Academy — navigation, first-cohort intake and support.
  *
- * Production data path:
- * browser -> BIU.G Academy API -> PostgreSQL + transactional email outbox.
- * No applicant or support payload is sent through a third-party form relay.
+ * Data paths:
+ * 1. Preferred (when an API base is configured via data-api-base,
+ *    <meta name="biug-api-base"> or window.BIUG_API_BASE):
+ *    browser -> BIU.G Academy API -> PostgreSQL + transactional email outbox.
+ * 2. Interim fallback (no API configured, e.g. static GitHub Pages hosting):
+ *    the form's own HTML action (FormSubmit relay to support@biugacademy.org).
+ *    Before this fallback existed, submissions on static hosting were sent to
+ *    "/api/waitlist" on GitHub Pages, which answers 404/405, so every
+ *    application failed. Remove the fallback once the API is deployed.
  */
 
 (function () {
@@ -11,6 +17,9 @@
 
   var DEFAULT_API_BASE = "";
   var SUPPORT_EMAIL = "support@biugacademy.org";
+  // Interim relay used only when no Academy API is configured.
+  var RELAY_FORM_ACTION = "https://formsubmit.co/" + SUPPORT_EMAIL;
+  var RELAY_AJAX_ENDPOINT = "https://formsubmit.co/ajax/" + SUPPORT_EMAIL;
 
   function initNav() {
     var toggle = document.querySelector(".nav-toggle");
@@ -67,6 +76,50 @@
 
   function apiEndpoint(form, path) {
     return resolveApiBase(form) + path;
+  }
+
+  /**
+   * True only when an explicit API origin is configured, or the page opts in
+   * with <html data-biug-api-same-origin> (host that also serves /api/*).
+   * Static hosts such as GitHub Pages cannot accept POST /api/*.
+   */
+  function apiIsConfigured(form) {
+    if (resolveApiBase(form)) return true;
+    return document.documentElement.hasAttribute("data-biug-api-same-origin");
+  }
+
+  function thankYouPathForLanguage() {
+    var lang = detectActiveLanguage(window.location.pathname || "/");
+    if (lang === "en") return "/en/thank-you/";
+    if (lang === "fr") return "/fr/candidature-recue/";
+    return "/pt/candidatura-recebida/";
+  }
+
+  function ensureHiddenInput(form, name, value) {
+    var input = form.querySelector('input[name="' + name + '"]');
+    if (input) return input;
+    input = document.createElement("input");
+    input.type = "hidden";
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+    return input;
+  }
+
+  /**
+   * Prepare a waitlist form for a native POST to the relay. Keeps the form's
+   * existing action when it already points at the relay; otherwise restores it.
+   */
+  function prepareRelaySubmission(form) {
+    var action = form.getAttribute("action") || "";
+    if (action.indexOf("https://formsubmit.co/") !== 0) {
+      form.setAttribute("action", RELAY_FORM_ACTION);
+    }
+    form.setAttribute("method", "POST");
+    ensureHiddenInput(form, "_subject", "BIU.G Academy - New First Cohort Application");
+    ensureHiddenInput(form, "_template", "table");
+    ensureHiddenInput(form, "_captcha", "false");
+    ensureHiddenInput(form, "_next", window.location.origin + thankYouPathForLanguage());
   }
 
   function guessReferralSource() {
@@ -155,6 +208,18 @@
   function initWaitlistForm(form) {
     if (!form) return;
     populateHiddenMetadata(form);
+
+    if (!apiIsConfigured(form)) {
+      // No Academy API on this host: let the browser submit natively to the
+      // relay declared in the HTML action. Do not intercept the submit.
+      prepareRelaySubmission(form);
+      form.addEventListener("submit", function () {
+        populateHiddenMetadata(form);
+        setSubmitState(form, true);
+      });
+      return;
+    }
+
     form.removeAttribute("action");
     form.setAttribute("method", "POST");
 
@@ -289,20 +354,30 @@
       }
       send.disabled = true;
       status.textContent = "A enviar...";
-      fetch(apiEndpoint(null, "/api/support"), {
+      var supportPayload = {
+        name: form.elements.name.value.trim(),
+        email: form.elements.email.value.trim(),
+        message: form.elements.message.value.trim(),
+        page_url: window.location.href,
+      };
+      var useApi = apiIsConfigured(null);
+      if (!useApi) {
+        supportPayload._subject = "BIU.G Academy - Support request";
+        supportPayload._template = "table";
+        supportPayload._captcha = "false";
+      }
+      fetch(useApi ? apiEndpoint(null, "/api/support") : RELAY_AJAX_ENDPOINT, {
         method: "POST",
         headers: { Accept: "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.elements.name.value.trim(),
-          email: form.elements.email.value.trim(),
-          message: form.elements.message.value.trim(),
-          page_url: window.location.href,
-        }),
+        body: JSON.stringify(supportPayload),
       })
         .then(parseJsonResponse)
         .then(function (result) {
-          if (!result.res.ok || !result.body || !result.body.ok)
-            throw new Error("Support submission failed");
+          // Academy API answers {ok:true}; the relay answers {success:"true"}.
+          var accepted = useApi
+            ? result.body && result.body.ok
+            : result.body && String(result.body.success) === "true";
+          if (!result.res.ok || !accepted) throw new Error("Support submission failed");
           form.reset();
           status.textContent = "Mensagem recebida. A equipa de suporte foi notificada.";
         })
@@ -316,7 +391,43 @@
     });
   }
 
+  /**
+   * Optional analytics. Disabled unless a token is configured. Set ONE of:
+   *   <meta name="biug-cf-analytics-token" content="YOUR_CF_WEB_ANALYTICS_TOKEN">
+   *   window.BIUG_CF_ANALYTICS_TOKEN = "YOUR_CF_WEB_ANALYTICS_TOKEN";
+   * (Cloudflare Web Analytics, cookieless.) For GA4 instead, set
+   *   <meta name="biug-ga4-id" content="G-XXXXXXXXXX"> - requires a consent decision.
+   * No token is shipped in the repository.
+   */
+  function initAnalytics() {
+    var cfMeta = document.querySelector('meta[name="biug-cf-analytics-token"]');
+    var cfToken =
+      (cfMeta && cfMeta.getAttribute("content")) || window.BIUG_CF_ANALYTICS_TOKEN || "";
+    if (cfToken) {
+      var cf = document.createElement("script");
+      cf.defer = true;
+      cf.src = "https://static.cloudflareinsights.com/beacon.min.js";
+      cf.setAttribute("data-cf-beacon", JSON.stringify({ token: cfToken }));
+      document.head.appendChild(cf);
+    }
+    var gaMeta = document.querySelector('meta[name="biug-ga4-id"]');
+    var gaId = (gaMeta && gaMeta.getAttribute("content")) || "";
+    if (gaId) {
+      var ga = document.createElement("script");
+      ga.async = true;
+      ga.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(gaId);
+      document.head.appendChild(ga);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () {
+        window.dataLayer.push(arguments);
+      };
+      window.gtag("js", new Date());
+      window.gtag("config", gaId);
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
+    initAnalytics();
     initNav();
     initLanguageSelector();
     initReveal();

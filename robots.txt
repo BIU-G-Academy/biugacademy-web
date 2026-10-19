@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /portal/
+Disallow: /backend/
+Disallow: /templates/
+Disallow: /google-apps-script/
+Disallow: /docs/
+
+Sitemap: https://biugacademy.org/sitemap.xml
