@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Apply to First Cohort | BIU.G Academy</title>
+    <title>Candidaturas | BIU.G Academy</title>
     <meta
       name="description"
-      content="Candidate-se para acesso antecipado à primeira turma da BIU.G Academy."
+      content="As candidaturas ainda não estão abertas. Esta página não recolhe quaisquer dados."
     />
     <link rel="icon" type="image/png" href="/assets/biug-academy-logo.png" />
     <link rel="apple-touch-icon" href="/assets/biug-academy-logo.png" />
@@ -41,7 +41,7 @@
           <li><a href="/pt/como-funciona/">Como funciona</a></li>
           <li><a href="/pt/sobre/">Sobre</a></li>
           <li><a href="/programs/">Programas</a></li>
-          <li><a href="/apply/" class="nav-cta is-active">Candidatar-se</a></li>
+          <li><a href="/apply/" class="nav-cta is-active">Candidaturas</a></li>
         </ul>
         <nav class="language-switcher" aria-label="Seletor de idioma">
           <a class="language-link" data-lang="pt" href="/pt/" hreflang="pt-AO">PT</a>
@@ -53,266 +53,24 @@
     <main>
       <header class="page-hero">
         <div class="container">
-          <h1>Entrar na Primeira Turma</h1>
-          <p class="sub">Candidate-se para acesso antecipado às primeiras lições.</p>
+          <h1>Candidaturas</h1>
+          <p class="sub">As candidaturas ainda não estão abertas.</p>
         </div>
       </header>
-      <section class="section section-light">
+      <section class="section section-light" id="applications-notice">
         <div class="section-inner">
-          <div class="waitlist-intro">
-            <p>
-              Analisamos cada candidatura com atenção. Participantes selecionados recebem acesso à
-              primeira turma.
-            </p>
-            <p class="selection-note">
-              Apenas candidatos selecionados terão acesso. Cada candidatura é analisada com base no
-              perfil, localização, motivação e alinhamento com a primeira trilha.
-            </p>
-          </div>
           <div class="waitlist-wrap">
-            <p class="urgency">
-              Primeira turma limitada a 100 participantes. Prioridade para candidatos baseados em
-              Angola.
-            </p>
-            <div id="form-message" class="form-message"></div>
-            <form
-              id="waitlist-form"
-              action="https://formsubmit.co/support@biugacademy.org"
-              method="POST"
-            >
-              <input
-                type="hidden"
-                name="_subject"
-                value="BIU.G Academy — New First Cohort Application"
-              />
-              <input type="hidden" name="_template" value="table" />
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_next" value="https://biugacademy.org/thank-you/" />
-              <input type="hidden" name="language" value="pt-AO" />
-              <input type="hidden" name="source" value="biugacademy-landing" />
-
-              <div class="form-group" data-field="full_name">
-                <label for="full_name">Nome completo <span class="req">*</span></label>
-                <input id="full_name" name="full_name" type="text" required autocomplete="name" />
-                <p class="error">Este campo é obrigatório.</p>
-              </div>
-
-              <div class="form-group" data-field="email">
-                <label for="email">Email <span class="req">*</span></label>
-                <input id="email" name="email" type="email" required autocomplete="email" />
-                <p class="error">Introduza um email válido.</p>
-              </div>
-
-              <div class="form-group" data-field="phone">
-                <label for="phone">Telefone / WhatsApp <span class="req">*</span></label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  required
-                  autocomplete="tel"
-                  placeholder="+244 9XX XXX XXX"
-                />
-                <p class="error">Introduza um número de telefone válido (mínimo 8 dígitos).</p>
-              </div>
-
-              <div class="form-group" data-field="country">
-                <label for="country">País <span class="req">*</span></label>
-                <select id="country" name="country" required>
-                  <option value="">Selecionar</option>
-                  <option value="Angola" selected>Angola</option>
-                  <option value="Moçambique">Moçambique</option>
-                  <option value="Brasil">Brasil</option>
-                  <option value="Portugal">Portugal</option>
-                  <option value="Cabo Verde">Cabo Verde</option>
-                  <option value="São Tomé e Príncipe">São Tomé e Príncipe</option>
-                  <option value="Guiné-Bissau">Guiné-Bissau</option>
-                  <option value="Outro">Outro</option>
-                </select>
-                <p class="error">Selecione o seu país.</p>
-              </div>
-
-              <div class="form-group" data-field="province">
-                <label for="province">Província <span class="req">*</span></label>
-                <input
-                  id="province"
-                  name="province"
-                  type="text"
-                  required
-                  placeholder="Ex: Luanda, Benguela, Huíla..."
-                />
-                <p class="error">Introduza a sua província.</p>
-              </div>
-
-              <div class="form-group" data-field="city">
-                <label for="city">Cidade / Município <span class="req">*</span></label>
-                <input
-                  id="city"
-                  name="city"
-                  type="text"
-                  required
-                  placeholder="Ex: Luanda, Lobito, Lubango..."
-                />
-                <p class="error">Introduza a sua cidade.</p>
-              </div>
-
-              <div class="form-group" data-field="area_of_interest">
-                <label for="area_of_interest"
-                  >O que pretende aprender? <span class="req">*</span></label
-                >
-                <select id="area_of_interest" name="area_of_interest" required>
-                  <option value="">Selecionar</option>
-                  <option value="Literacia financeira">Literacia financeira</option>
-                  <option value="Pequenos negócios">Pequenos negócios</option>
-                  <option value="Competências digitais">Competências digitais</option>
-                  <option value="Tecnologia / Software">Tecnologia / Software</option>
-                  <option value="IA / Dados">IA / Dados</option>
-                  <option value="Mercados e trading educacional">
-                    Mercados e trading educacional
-                  </option>
-                  <option value="Outro">Outro</option>
-                </select>
-                <p class="error">Selecione uma área de interesse.</p>
-              </div>
-
-              <div class="form-group" data-field="commitment_level">
-                <label for="commitment_level"
-                  >Nível de compromisso <span class="req">*</span></label
-                >
-                <select id="commitment_level" name="commitment_level" required>
-                  <option value="">Selecionar</option>
-                  <option value="Quero aprender por curiosidade">
-                    Quero aprender por curiosidade
-                  </option>
-                  <option value="Quero melhorar minha renda">Quero melhorar minha renda</option>
-                  <option value="Quero construir um negócio">Quero construir um negócio</option>
-                  <option value="Quero trabalhar com tecnologia / IA">
-                    Quero trabalhar com tecnologia / IA
-                  </option>
-                  <option value="Quero preparar-me para oportunidades futuras">
-                    Quero preparar-me para oportunidades futuras
-                  </option>
-                </select>
-                <p class="error">Selecione o seu nível de compromisso.</p>
-              </div>
-
-              <div class="form-group" data-field="ai_experience_level">
-                <label for="ai_experience_level"
-                  >Nível de experiência com IA <span class="req">*</span></label
-                >
-                <select id="ai_experience_level" name="ai_experience_level" required>
-                  <option value="">Selecionar</option>
-                  <option value="Nenhuma experiência">Nenhuma experiência</option>
-                  <option value="Iniciante">Iniciante</option>
-                  <option value="Intermédio">Intermédio</option>
-                  <option value="Avançado">Avançado</option>
-                </select>
-                <p class="error">Selecione o seu nível de experiência com IA.</p>
-              </div>
-
-              <div class="form-group" data-field="cubeshackles_ecosystem_interest">
-                <label for="cubeshackles_ecosystem_interest"
-                  >Interesse no ecossistema CubeShackles <span class="req">*</span></label
-                >
-                <select
-                  id="cubeshackles_ecosystem_interest"
-                  name="cubeshackles_ecosystem_interest"
-                  required
-                >
-                  <option value="">Selecionar</option>
-                  <option value="Sim">Sim</option>
-                  <option value="Não">Não</option>
-                  <option value="Talvez">Talvez</option>
-                </select>
-                <p class="error">Selecione o seu interesse.</p>
-              </div>
-
-              <div class="form-group" data-field="expertise">
-                <label for="expertise">Áreas de experiência <span class="req">*</span></label>
-                <textarea
-                  id="expertise"
-                  name="expertise"
-                  required
-                  placeholder="Competências, ferramentas, línguas, experiência profissional ou técnica"
-                ></textarea>
-                <p class="error">Descreva as suas áreas de experiência.</p>
-              </div>
-
-              <div class="form-group" data-field="problem_to_solve">
-                <label for="problem_to_solve"
-                  >Que problema quer resolver em Angola ou África? <span class="req">*</span></label
-                >
-                <textarea
-                  id="problem_to_solve"
-                  name="problem_to_solve"
-                  required
-                  placeholder="Descreva o problema que gostaria de ajudar a resolver..."
-                ></textarea>
-                <p class="error">Descreva o problema que quer resolver.</p>
-              </div>
-
-              <div class="form-group" data-field="why_join">
-                <label for="why_join">Porque quer entrar? <span class="req">*</span></label>
-                <textarea
-                  id="why_join"
-                  name="why_join"
-                  required
-                  placeholder="O que o motiva a juntar-se à primeira turma?"
-                ></textarea>
-                <p class="error">Explique porque quer entrar.</p>
-              </div>
-
-              <div class="form-group" data-field="consent">
-                <label class="checkbox-row">
-                  <input type="checkbox" name="consent" value="yes" required />
-                  <span
-                    >Concordo que a BIU.G Academy pode usar estas informações para avaliar
-                    oportunidades futuras de educação, formação, trilhas técnicas, ecossistema de
-                    desenvolvedores e plataformas relacionadas.</span
-                  >
-                </label>
-                <p class="error">É necessário concordar para continuar.</p>
-              </div>
-
-              <div class="form-group" data-field="whatsapp_optin">
-                <label class="checkbox-row">
-                  <input type="checkbox" name="whatsapp_optin" value="yes" required />
-                  <span>Quero receber atualizações e oportunidades exclusivas via WhatsApp.</span>
-                </label>
-                <p class="error">É necessário aceitar para continuar.</p>
-              </div>
-
-              <details class="form-extra">
-                <summary>Detalhes adicionais (melhora a sua candidatura)</summary>
-                <div class="form-group" data-field="certifications">
-                  <label for="certifications">Certificações recentes</label>
-                  <input
-                    id="certifications"
-                    name="certifications"
-                    type="text"
-                    placeholder="Ex: Google Digital Garage, AWS Cloud..."
-                  />
-                </div>
-                <div class="form-group" data-field="tools_used">
-                  <label for="tools_used">Ferramentas ou tecnologias que já usou</label>
-                  <input
-                    id="tools_used"
-                    name="tools_used"
-                    type="text"
-                    placeholder="Ex: Excel, Canva, VS Code, Git..."
-                  />
-                </div>
-              </details>
-
-              <button type="submit" class="btn btn-primary form-submit-btn">
-                Candidatar-se à Primeira Turma
-              </button>
-            </form>
-            <p class="form-privacy-note">
-              A submissão não garante admissão. A primeira turma será limitada e selecionada com
-              base em alinhamento, disponibilidade e adequação às trilhas iniciais.
-            </p>
+            <div class="notice" role="status">
+              <p><strong>As candidaturas ainda não estão abertas.</strong></p>
+              <p>Esta página não recolhe quaisquer dados. Não existe formulário e, neste momento, não recebemos candidaturas através deste site.</p>
+              <p>Para questões gerais, escreva para support@biugacademy.org (apenas texto; esta página não envia nem recolhe informação). Não recolhemos candidaturas por formulário; pedimos que não envie documentos nem dados pessoais.</p>
+            </div>
           </div>
+        </div>
+      </section>
+      <section class="section trust">
+        <div class="section-inner">
+          <p class="notice">A BIU.G Academy não é uma universidade e atualmente não emite graus académicos acreditados.</p>
         </div>
       </section>
     </main>
@@ -336,7 +94,7 @@
           <a href="/platform/">Como funciona</a>
           <a href="/about/">Sobre</a>
           <a href="/programs/">Programas</a>
-          <a href="/apply/">Entrar na Primeira Turma</a>
+          <a href="/apply/">Candidaturas</a>
         </nav>
       </div>
       <p class="footer-copy">
