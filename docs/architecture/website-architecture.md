@@ -47,13 +47,13 @@ Documentation refers to **`apply/`** as the logical application route; implement
 
 ## Intake (current)
 
-Application forms may submit to external bridges (for example Google Apps Script) documented under `google-apps-script/`. Submissions are **not** processed by GitHub Pages itself.
+The public site does not submit applications. Submissions are **not** processed by GitHub Pages itself.
 
 ## Non-production components
 
 | Component         | Status                                                            |
 | ----------------- | ----------------------------------------------------------------- |
-| `backend/`        | Experimental; not part of Pages deploy                            |
+| Server code       | Not in the public site root                                       |
 | AI classification | Not production (see [future-ai-backend.md](future-ai-backend.md)) |
 
 ## Related documents
