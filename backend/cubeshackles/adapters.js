@@ -38,10 +38,10 @@ const ADAPTERS = [
     evidence_url: "https://github.com/CubeShackles/cubeshackles",
     observed:
       "HTTP 404 to the unauthenticated GitHub API and to github.com on 2026-11-07. Not evidence that the repository is empty.",
-    label_pt: "Repositório umbrella",
+    label_pt: "Repositório principal da CubeShackles",
     label_en: "Umbrella repository",
     detail_pt:
-      "O contrato umbrella não ficou acessível nesta revisão. Nenhum endpoint foi inferido.",
+      "O contrato do repositório principal não ficou acessível nesta revisão. Nenhum ponto de acesso foi inferido.",
     detail_en: "The umbrella contract was not accessible in this review. No endpoint was inferred.",
   },
   {
@@ -66,7 +66,8 @@ const ADAPTERS = [
     observed: "No CubeShackles SSO or OAuth contract was available to this review.",
     label_pt: "Início de sessão CubeShackles",
     label_en: "CubeShackles sign-in",
-    detail_pt: "Não existe SSO configurado. A única sessão é a cookie local da Academy.",
+    detail_pt:
+      "Não existe SSO configurado. A única sessão é a da própria Academy, guardada neste navegador.",
     detail_en: "No SSO is configured. The only session is the Academy local cookie.",
   },
 ];

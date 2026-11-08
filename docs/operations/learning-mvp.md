@@ -43,6 +43,14 @@ Disabling an account is allowed for an admin because it removes access. It does 
 
 The new learner pilot in this design is 18+ only. A false attestation is rejected.
 
+## Language policy
+
+- Portuguese (`pt-AO`) follows Angolan usage under the 1990 Orthographic Agreement (AO90), which Angola applies. Vocabulary is Angolan: `utilizador`, `palavra-passe`, `contacto`, `formando`, `formador`, `turma`, `percurso`. Brazilian forms such as `usuário`, `senha`, `aprendiz`, `trilha`, and `cadastro` are not used. Pre-AO90 spellings such as `pára` and `actual` are not used.
+- English (`en-US`) uses US spelling and usage: "18 or older" rather than "18 or over", and "email" rather than "e-mail". The English pilot line reads "The Academy pilot is only for people 18 or older."
+- French (`fr-FR`) appears only in the approved closure sentence "Les candidatures ne sont pas encore ouvertes." Canadian and Belgian forms are not used.
+- `backend/test/locale.test.js` checks the strings in the learning API, the catalog, the adapter inventory, and the static learning page for these rules. It is a word-list guard, not a proof of idiom. Native reviewers for Angolan Portuguese, US English, and France French must sign off before release. Those reviews have not happened.
+- Pre-existing English shells in `portal/` (role cards and the admin, student, teacher, and moderator consoles) and the public `pt/`, `en/`, and `fr/` pages are outside this slice and are not covered by the guard. They are a known deviation to resolve in a separate change.
+
 ## CubeShackles integration inventory
 
 Observed on 2026-11-07 with the credentials available to this review. This is an inventory of what could be read, not a claim of commercial availability.
@@ -122,7 +130,7 @@ export ACADEMY_SYNTHETIC_PASSWORD='replace-with-a-local-secret'
 node scripts/synthetic-demo.js
 ```
 
-Open `http://127.0.0.1:3000/learn/`. Logins are `sint-admin`, `sint-instrutor`, and `sint-aprendiz`. The password is the environment variable and is not printed. Data is memory-only and is not a real cohort.
+Open `http://127.0.0.1:3000/learn/`. Logins are `sint-administrador`, `sint-formador`, and `sint-formando`. The password is the environment variable and is not printed. Data is memory-only and is not a real cohort.
 
 Default tests do not need PostgreSQL:
 

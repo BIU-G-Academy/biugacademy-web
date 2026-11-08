@@ -2,6 +2,22 @@
 
 const lang = new URLSearchParams(window.location.search).get("lang") === "en" ? "en" : "pt";
 const text = (pt, en) => (lang === "en" ? en : pt);
+const pick = (pair) => (lang === "en" ? pair.en : pair.pt);
+const ROLE = {
+  learner: { pt: "Formando", en: "Learner" },
+  instructor: { pt: "Formador", en: "Instructor" },
+  admin: { pt: "Administrador", en: "Administrator" },
+};
+const TRACK = {
+  developer: { pt: "Programação", en: "Developer" },
+  nondeveloper: { pt: "Sem programação", en: "Non-developer" },
+};
+const TOOL_STATUS = {
+  reference_only: { pt: "Apenas referência", en: "Reference only" },
+  not_accessible: { pt: "Não acessível", en: "Not accessible" },
+  unconfigured: { pt: "Não configurado", en: "Not configured" },
+};
+const labelOf = (map, key) => (map[key] ? pick(map[key]) : key);
 const message = (data) =>
   (data &&
     (lang === "en" ? data.message_en || data.message_pt : data.message_pt || data.message_en)) ||
@@ -83,7 +99,7 @@ function notice(status) {
       null,
       text(
         "Piloto apenas para pessoas com 18 anos ou mais. Não está pronto para produção.",
-        "Pilot for people aged 18 or over only. Not production-ready."
+        "Pilot for people 18 or older only. Not production-ready."
       )
     ),
     status && status.synthetic_demo
@@ -91,8 +107,8 @@ function notice(status) {
           "p",
           null,
           text(
-            "Demonstração sintética em memória. Não aprovisiona pessoas reais e desaparece quando o processo pára.",
-            "In-memory synthetic demonstration. It does not provision real people and disappears when the process stops."
+            "Demonstração sintética em memória. Não cria contas para pessoas reais e desaparece quando o processo para.",
+            "In-memory synthetic demonstration. It does not create accounts for real people and disappears when the process stops."
           )
         )
       : null,
@@ -101,7 +117,7 @@ function notice(status) {
           "p",
           { class: "muted" },
           text("Ferramentas CubeShackles: ", "CubeShackles tools: ") +
-            (status.cubeshackles_tools || "unconfigured")
+            labelOf(TOOL_STATUS, status.cubeshackles_tools || "unconfigured")
         )
       : null,
   ]);
@@ -113,7 +129,7 @@ function renderError() {
 
 function renderLogin() {
   const form = h("form", { id: "login-form" }, [
-    ...field("login-name", text("Identificador", "Login"), "text", {
+    ...field("login-name", text("Nome de utilizador", "Username"), "text", {
       autocomplete: "username",
       autocapitalize: "none",
     }),
@@ -165,7 +181,7 @@ function cohortButton(cohort) {
       type: "button",
       onclick: () => openCohort(cohort.id),
     },
-    `${cohort.name} · ${cohort.track}`
+    `${cohort.name} · ${labelOf(TRACK, cohort.track)}`
   );
 }
 
@@ -176,14 +192,14 @@ function renderTools() {
       "p",
       { class: "muted" },
       text(
-        "Nenhum adaptador está callable. Referências públicas não são uma sessão nem uma API.",
+        "Nenhum adaptador pode ser chamado. Referências públicas não são uma sessão nem uma API.",
         "No adapter is callable. Public references are not a session or an API."
       )
     ),
     ...state.tools.map((adapter) =>
       h("article", { class: "card" }, [
         h("h3", null, lang === "en" ? adapter.label_en : adapter.label_pt),
-        h("span", { class: "pill off" }, adapter.status),
+        h("span", { class: "pill off" }, labelOf(TOOL_STATUS, adapter.status)),
         h("p", null, lang === "en" ? adapter.detail_en : adapter.detail_pt),
         adapter.evidence_url
           ? h(
@@ -267,7 +283,7 @@ function renderInsights() {
     h("h2", null, text("Leitura da turma", "Cohort insight")),
     h("div", { class: "metrics" }, [
       h("div", { class: "metric" }, [
-        text("Aprendizes", "Learners"),
+        text("Formandos", "Learners"),
         h("strong", null, String(insights.learner_count)),
       ]),
       h("div", { class: "metric" }, [text("Conclusões", "Completions"), h("strong", null, rate)]),
@@ -323,7 +339,7 @@ function renderModules() {
               mod.completed
                 ? text("Concluído no servidor.", "Completed on the server.")
                 : text(
-                    "Só o aprendiz marca o próprio progresso.",
+                    "Só o formando marca o próprio progresso.",
                     "Only the learner records their own progress."
                   )
             ),
@@ -389,13 +405,17 @@ function renderAdminTools() {
       "select",
       { id: "member-id", required: true },
       state.accounts.map((account) =>
-        h("option", { value: account.id }, `${account.display_name} (${account.role})`)
+        h(
+          "option",
+          { value: account.id },
+          `${account.display_name} (${labelOf(ROLE, account.role)})`
+        )
       )
     ),
     h("label", { for: "member-role" }, text("Papel na turma", "Role in cohort")),
     h("select", { id: "member-role" }, [
-      h("option", { value: "learner" }, text("Aprendiz", "Learner")),
-      h("option", { value: "instructor" }, text("Instrutor", "Instructor")),
+      h("option", { value: "learner" }, text("Formando", "Learner")),
+      h("option", { value: "instructor" }, text("Formador", "Instructor")),
     ]),
     h("div", { class: "row" }, [h("button", { type: "submit" }, text("Adicionar", "Add"))]),
   ]);
@@ -423,13 +443,13 @@ function renderAdminHome() {
   const overview = state.overview;
   const form = h("form", { id: "admin-cohort-form" }, [
     ...field("cohort-name", text("Nome da turma", "Cohort name"), "text"),
-    ...field("cohort-slug", text("Identificador", "Identifier"), "text", {
+    ...field("cohort-slug", text("Identificador da turma", "Cohort identifier"), "text", {
       autocapitalize: "none",
     }),
-    h("label", { for: "cohort-track" }, text("Trilha", "Track")),
+    h("label", { for: "cohort-track" }, text("Percurso", "Track")),
     h("select", { id: "cohort-track" }, [
-      h("option", { value: "developer" }, text("Developers", "Developers")),
-      h("option", { value: "nondeveloper" }, text("Não developers", "Non-developers")),
+      h("option", { value: "developer" }, labelOf(TRACK, "developer")),
+      h("option", { value: "nondeveloper" }, labelOf(TRACK, "nondeveloper")),
     ]),
     h("div", { class: "row" }, [
       h("button", { type: "submit" }, text("Criar turma", "Create cohort")),
@@ -460,11 +480,13 @@ function renderAdminHome() {
       "p",
       { class: "muted" },
       text(
-        "Criação sintética local, se o servidor a permitir. Não há campo de e-mail, telefone ou nome legal.",
+        "Criação sintética local, se o servidor a permitir. Não há campo para contacto, telefone ou nome legal.",
         "Local synthetic creation, if the server allows it. There is no email, phone, or legal-name field."
       )
     ),
-    ...field("new-login", text("Identificador", "Login"), "text", { autocapitalize: "none" }),
+    ...field("new-login", text("Nome de utilizador", "Username"), "text", {
+      autocapitalize: "none",
+    }),
     ...field("new-display", text("Nome visível", "Display name"), "text"),
     ...field("new-password", text("Palavra-passe", "Password"), "password", {
       autocomplete: "new-password",
@@ -472,15 +494,15 @@ function renderAdminHome() {
     }),
     h("label", { for: "new-role" }, text("Papel", "Role")),
     h("select", { id: "new-role" }, [
-      h("option", { value: "learner" }, text("Aprendiz", "Learner")),
-      h("option", { value: "instructor" }, text("Instrutor", "Instructor")),
-      h("option", { value: "admin" }, "Admin"),
+      h("option", { value: "learner" }, labelOf(ROLE, "learner")),
+      h("option", { value: "instructor" }, labelOf(ROLE, "instructor")),
+      h("option", { value: "admin" }, labelOf(ROLE, "admin")),
     ]),
     h("label", { class: "check" }, [
       h("input", { id: "age-18", type: "checkbox" }),
       text(
         "Confirmo que esta conta sintética representa uma pessoa com 18 anos ou mais.",
-        "I confirm this synthetic account represents a person aged 18 or over."
+        "I confirm this synthetic account represents a person aged 18 or older."
       ),
     ]),
     h("div", { class: "row" }, [
@@ -512,7 +534,7 @@ function renderAdminHome() {
             h("strong", null, String(overview.cohort_count)),
           ]),
           h("div", { class: "metric" }, [
-            text("Aprendizes ativos", "Active learners"),
+            text("Formandos ativos", "Active learners"),
             h("strong", null, String(overview.active_accounts.learner)),
           ]),
         ])
@@ -525,7 +547,7 @@ function renderAdminHome() {
 function renderHome() {
   return h("section", null, [
     h("div", { class: "row" }, [
-      h("p", null, `${state.account.display_name} · ${state.account.role}`),
+      h("p", null, `${state.account.display_name} · ${labelOf(ROLE, state.account.role)}`),
       h(
         "button",
         {
@@ -553,7 +575,11 @@ function renderHome() {
     state.cohort
       ? h("section", { class: "panel" }, [
           h("h2", null, state.cohort.cohort.name),
-          h("p", { class: "muted" }, state.cohort.cohort.summary || state.cohort.cohort.track),
+          h(
+            "p",
+            { class: "muted" },
+            state.cohort.cohort.summary || labelOf(TRACK, state.cohort.cohort.track)
+          ),
           renderInsights(),
           renderModules(),
           renderAdminTools(),
@@ -578,7 +604,7 @@ function render() {
         ? renderHome()
         : renderLogin()
   );
-  document.documentElement.lang = lang === "en" ? "en" : "pt-AO";
+  document.documentElement.lang = lang === "en" ? "en-US" : "pt-AO";
 }
 
 async function openCohort(id) {

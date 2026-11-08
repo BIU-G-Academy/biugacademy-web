@@ -15,7 +15,7 @@ const BADGES = [
   },
   {
     id: "trilha_concluida",
-    title_pt: "Trilha concluída",
+    title_pt: "Percurso concluído",
     title_en: "Track completed",
     rule: "Earned only when the cohort has at least one assigned module and the learner has completed every module currently assigned. Removed from the earned set if a later assignment makes that untrue.",
   },
@@ -25,7 +25,7 @@ const COURSES = [
   {
     id: "dev-cubeshackles-orientation",
     track: "developer",
-    title_pt: "Orientação CubeShackles para developers",
+    title_pt: "Orientação CubeShackles para programação",
     title_en: "CubeShackles orientation for developers",
     summary_pt: "Leitura do que está publicado e do que ainda não está ligado. Sem chamada a APIs.",
     summary_en: "Read what is published and what is not connected yet. No API calls.",
@@ -69,7 +69,7 @@ const COURSES = [
             },
             {
               id: "no_secrets_in_repo",
-              label_pt: "Segredos não são commitados no repositório.",
+              label_pt: "Segredos não são guardados no repositório.",
               label_en: "Secrets are not committed to the repository.",
             },
           ],
@@ -88,7 +88,7 @@ const COURSES = [
           items: [
             {
               id: "tools_unconfigured",
-              label_pt: "O adaptador de API de ferramentas está não configurado.",
+              label_pt: "O adaptador da API de ferramentas não está configurado.",
               label_en: "The tool API adapter is unconfigured.",
             },
             {
@@ -111,7 +111,7 @@ const COURSES = [
     track: "developer",
     title_pt: "Revisão curta do limite",
     title_en: "Short boundary review",
-    summary_pt: "Um módulo extra para a turma developer. Não liga ferramentas.",
+    summary_pt: "Um módulo extra para a turma de programação. Não liga ferramentas.",
     summary_en: "One extra module for the developer track. It does not connect tools.",
     modules: [
       {
@@ -191,7 +191,7 @@ const COURSES = [
             {
               id: "age_18",
               label_pt: "O piloto da Academy é apenas para pessoas com 18 anos ou mais.",
-              label_en: "The Academy pilot is only for people aged 18 or over.",
+              label_en: "The Academy pilot is only for people 18 or older.",
             },
             {
               id: "no_personal_documents",
