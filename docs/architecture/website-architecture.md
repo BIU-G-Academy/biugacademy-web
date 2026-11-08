@@ -19,6 +19,7 @@ GitHub Pages (static)
 - No server-side rendering in production
 - No build toolchain required for deployment
 - Custom domain via `CNAME` → `biugacademy.org`
+- `/portal/learn/` is an under-development client. The static file does not authenticate. Sessions exist only when the separate API is running
 
 ## Public routes
 

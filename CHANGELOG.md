@@ -8,6 +8,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Learning MVP under development, not operational: server sessions, learner/instructor/admin authorization, cohorts, assignments, progress, two earned badges, and cohort insight (`backend/learning/`, `portal/learn/`)
+- CubeShackles adapter inventory that stays non-callable (`backend/cubeshackles/adapters.js`, `docs/operations/learning-mvp.md`)
+- Forward migration `backend/migrations/004_academy_learning.sql` and an unapplied rollback script in `backend/rollback/`
 - Institutional documentation taxonomy: partnerships, governance, metrics, branding, i18n
 - Root `ARCHITECTURE.md` with system overview and Mermaid diagrams
 - `docs/operations/deployment-guide.md` and `docs/operations/pdf-export-pipeline.md`
@@ -23,6 +26,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- `POST /api/waitlist` and `POST /api/support` fail closed and do not persist personal data. Public copy remains "As candidaturas ainda não estão abertas." / "Applications are not open yet."
 - `README.md`, `ROADMAP.md`, `CONTRIBUTING.md`, `GOVERNANCE.md`, `SECURITY.md` — institutional upgrade
 - Roadmap rephased to Phases 0–6 (website → partnerships)
 - `docs/design/brand-guidelines.md` redirects to `docs/branding/`
