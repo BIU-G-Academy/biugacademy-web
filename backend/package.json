@@ -2,14 +2,14 @@
   "name": "biug-academy-backend",
   "version": "1.0.0",
   "private": true,
-  "description": "BIU.G Academy AI-native waitlist intake (Express + PostgreSQL + OpenAI)",
+  "description": "BIU.G Academy API. Personal-data intake is fail-closed. Learning sessions are not production-ready.",
   "main": "server.js",
   "scripts": {
     "migrate": "node scripts/migrate.js",
     "migrate:status": "node scripts/migrate-status.js",
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "node --test test/"
+    "test": "node --test \"test/**/*.js\""
   },
   "engines": {
     "node": ">=20"

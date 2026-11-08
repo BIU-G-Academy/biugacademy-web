@@ -8,7 +8,10 @@ const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const { z } = require("zod");
 
+const path = require("path");
 const { getPool, checkDbConnection } = require("./db");
+const { personalIntakeOpen, intakeClosedBody, supportClosedBody } = require("./learning/gates");
+const { createLearningRouter } = require("./learning/http");
 const {
   queueApplicationEmails,
   queueSupportRequestEmail,
@@ -191,7 +194,7 @@ app.use(
     },
     credentials: true,
     methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Accept"],
+    allowedHeaders: ["Content-Type", "Accept", "X-BIUG-Client"],
   })
 );
 app.use(express.json({ limit: "256kb" }));
@@ -234,6 +237,9 @@ app.get("/health/email", async (_req, res) => {
 });
 
 app.post("/api/waitlist", publicPostLimiter, async (req, res) => {
+  if (!personalIntakeOpen(process.env)) {
+    return res.status(403).json(intakeClosedBody());
+  }
   const input = isSimplifiedPayload(req.body) ? normalizeSimplifiedPayload(req.body) : req.body;
   if (input && String(input.honeypot || "").trim() !== "") {
     return res.status(202).json({ ok: true, status: "accepted" });
@@ -374,6 +380,9 @@ app.post("/api/waitlist", publicPostLimiter, async (req, res) => {
 });
 
 app.post("/api/support", publicPostLimiter, async (req, res) => {
+  if (!personalIntakeOpen(process.env)) {
+    return res.status(403).json(supportClosedBody());
+  }
   const parsed = supportBodySchema.safeParse(req.body);
   if (!parsed.success) {
     return res.status(400).json({ success: false, error: "Invalid support request." });
@@ -413,6 +422,18 @@ app.post("/api/support", publicPostLimiter, async (req, res) => {
     .json({ ok: true, support_request_id: supportRequest.id, status: "received" });
 });
 
+app.use("/api", createLearningRouter({ env: process.env }));
+app.use(
+  "/learn",
+  express.static(path.join(__dirname, "..", "portal", "learn"), {
+    index: "index.html",
+    setHeaders(res) {
+      res.setHeader("Cache-Control", "no-store");
+      res.setHeader("X-Robots-Tag", "noindex, nofollow");
+    },
+  })
+);
+
 app.use((err, _req, res, _next) => {
   console.error(err);
   res.status(500).json({ success: false, error: "Internal server error" });
@@ -427,7 +448,7 @@ async function start() {
   }
   const pool = getPool();
   startOutboxWorker(pool);
-  app.listen(PORT, () => console.log(`BIU.G Academy backend listening on port ${PORT}`));
+  app.listen(PORT, "0.0.0.0", () => console.log(`BIU.G Academy backend listening on port ${PORT}`));
 }
 
 if (require.main === module) start();

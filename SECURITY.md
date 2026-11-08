@@ -63,6 +63,8 @@ When APIs and databases deploy:
 
 Experimental `backend/` code is not production infrastructure.
 
+The learning slice in `backend/learning/` adds HTTP-only sessions and server-side roles. It does not make the public website an authenticated academy. Personal-data intake is fail-closed in that slice. Do not treat synthetic demo accounts as production users. See [docs/operations/learning-mvp.md](docs/operations/learning-mvp.md).
+
 ---
 
 ## Form abuse

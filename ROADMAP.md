@@ -75,11 +75,11 @@ See [docs/curriculum/overview.md](docs/curriculum/overview.md).
 
 **Goal:** Privacy-conscious operational metrics and admin tools.
 
-| Item                           | Status      |
-| ------------------------------ | ----------- |
-| Application database and API   | **Planned** |
-| Admin dashboard                | **Planned** |
-| Outcomes metrics per framework | **Planned** |
+| Item                           | Status                                                                           |
+| ------------------------------ | -------------------------------------------------------------------------------- |
+| Application database and API   | **Planned** — intake on this branch is fail-closed; not a live admissions system |
+| Admin dashboard                | **Under development** — learning MVP only; not operational                       |
+| Outcomes metrics per framework | **Planned**                                                                      |
 
 See [docs/metrics/outcomes-framework.md](docs/metrics/outcomes-framework.md).
 

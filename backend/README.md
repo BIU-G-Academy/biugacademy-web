@@ -4,10 +4,9 @@ Express + PostgreSQL intake API for BIU.G Academy waitlist applications.
 
 ## What this service does
 
-- Exposes structured intake endpoint: `POST /api/waitlist`
-- Validates payload server-side (Zod)
-- Persists intake records in PostgreSQL
-- Applies anti-spam controls (rate limit + honeypot)
+- Serves a non-production learning API (sessions, roles, cohorts, progress) documented in `docs/operations/learning-mvp.md`
+- Keeps `POST /api/waitlist` and `POST /api/support` fail-closed. They do not persist personal data in this build
+- Validates any future intake payload server-side (Zod) only if a later reviewed change reopens intake in code
 - Enforces CORS against `FRONTEND_ORIGIN`
 
 ## Project layout
@@ -15,8 +14,11 @@ Express + PostgreSQL intake API for BIU.G Academy waitlist applications.
 | Path                        | Role                                   |
 | --------------------------- | -------------------------------------- |
 | `server.js`                 | Express API and routes                 |
+| `learning/`                 | Sessions, RBAC, cohorts, progress      |
+| `cubeshackles/adapters.js`  | Non-callable integration inventory     |
 | `db.js`                     | PostgreSQL pool and connectivity check |
 | `migrations/`               | SQL migrations (ordered)               |
+| `rollback/`                 | Manual down scripts, not auto-run      |
 | `scripts/migrate.js`        | Migration runner                       |
 | `scripts/migrate-status.js` | Migration status reporter              |
 | `test/`                     | Node test suite                        |
@@ -108,39 +110,17 @@ Expected:
 }
 ```
 
-## Structured intake test (curl)
+## Closed intake check (curl)
 
 ```bash
 curl -sS -X POST http://localhost:3000/api/waitlist \
   -H "Content-Type: application/json" \
-  -H "Origin: http://localhost:8080" \
-  -d '{
-    "full_name": "Test Applicant",
-    "email": "test@example.com",
-    "phone_number": "+244923456789",
-    "whatsapp_number": "+244923456789",
-    "province": "Luanda",
-    "municipality": "Luanda",
-    "age_range": "25-34",
-    "primary_language": "Portuguese",
-    "education_level": "Secondary",
-    "areas_of_interest": ["financial-literacy", "digital-skills"],
-    "technical_background": "Basic digital tools and customer support",
-    "internet_access_level": "Mobile data only",
-    "device_access": "Smartphone only",
-    "employment_status": "Informal worker",
-    "linkedin_optional": "",
-    "github_optional": "",
-    "motivation_statement": "I want to improve practical skills for financial stability and long-term opportunities.",
-    "consent_checkbox": true,
-    "source_platform": "biugacademy-web",
-    "browser_language": "pt-AO",
-    "timezone": "Africa/Luanda",
-    "referral_source": "manual-test",
-    "submission_timestamp": "2026-05-27T15:30:00.000Z",
-    "honeypot": ""
-  }' | jq .
+  -d '{"honeypot":""}'
 ```
+
+Expected HTTP 403 with `persisted: false` and both `As candidaturas ainda não estão abertas.` and `Applications are not open yet.` Do not send a real applicant.
+
+Learning routes and the synthetic demo are documented in `docs/operations/learning-mvp.md`.
 
 ## Scripts
 
