@@ -13,12 +13,12 @@ const DEFAULT_TTL_MS = 12 * 60 * 60 * 1000;
 const MESSAGES = {
   invalid_credentials: ["Credenciais inválidas.", "Invalid credentials."],
   provisioning_closed: [
-    "A criação de contas está fechada. Este ambiente não aprovisiona pessoas reais.",
+    "A criação de contas está fechada. Este ambiente não cria contas para pessoas reais.",
     "Account creation is closed. This environment does not provision real people.",
   ],
   age_requirement: [
     "O piloto de aprendizagem é apenas para pessoas com 18 anos ou mais.",
-    "The learning pilot is for people aged 18 or over only.",
+    "The learning pilot is for people 18 or older only.",
   ],
   validation_failed: ["Os dados enviados não são válidos.", "The submitted data is not valid."],
   display_name_not_contact: [
@@ -26,26 +26,26 @@ const MESSAGES = {
     "The display name cannot be a contact address.",
   ],
   password_too_close_to_login: [
-    "A palavra-passe não pode conter o identificador de sessão.",
-    "The password cannot contain the login identifier.",
+    "A palavra-passe não pode conter o nome de utilizador.",
+    "The password cannot contain the username.",
   ],
-  login_taken: ["Esse identificador já existe.", "That login identifier already exists."],
+  login_taken: ["Esse nome de utilizador já existe.", "That username already exists."],
   not_found: ["Não encontrado.", "Not found."],
   account_not_found: ["Conta não encontrada.", "Account not found."],
   role_mismatch: [
-    "Uma conta de aprendiz só pode entrar como aprendiz.",
+    "Uma conta de formando só pode entrar como formando.",
     "A learner account can only join as a learner.",
   ],
   already_member: ["Esta conta já está na turma.", "This account is already in the cohort."],
   slug_taken: ["Esse identificador de turma já existe.", "That cohort identifier already exists."],
   course_not_found: ["Curso não encontrado.", "Course not found."],
   track_mismatch: [
-    "O curso não pertence à trilha desta turma.",
+    "O curso não pertence ao percurso desta turma.",
     "The course does not belong to this cohort track.",
   ],
   course_already_assigned: ["Esse curso já está atribuído.", "That course is already assigned."],
   not_a_learner: [
-    "Só o aprendiz membro pode marcar o próprio progresso.",
+    "Só o formando da turma pode marcar o próprio progresso.",
     "Only the learner member can record their own progress.",
   ],
   checklist_incomplete: [
@@ -418,4 +418,4 @@ function createLearningRouter(options = {}) {
   return router;
 }
 
-module.exports = { createLearningRouter, COOKIE };
+module.exports = { createLearningRouter, COOKIE, MESSAGES };

@@ -119,7 +119,7 @@ describe("published server does not seed demo users", () => {
   it("does not reference the synthetic seed from server.js", () => {
     const source = fs.readFileSync(path.join(__dirname, "..", "server.js"), "utf8");
     assert.equal(source.includes("synthetic-seed"), false);
-    assert.equal(source.includes("sint-admin"), false);
-    assert.equal(source.includes("sint-aprendiz"), false);
+    assert.equal(source.includes("sint-administrador"), false);
+    assert.equal(source.includes("sint-formando"), false);
   });
 });

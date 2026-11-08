@@ -5,10 +5,17 @@ const { provisioningMode } = require("./gates");
 const { hashPassword } = require("./passwords");
 
 const SYNTHETIC_ACCOUNTS = [
-  { login_name: "sint-admin", display_name: "Admin sintético", role: "admin" },
-  { login_name: "sint-instrutor", display_name: "Instrutor sintético", role: "instructor" },
-  { login_name: "sint-aprendiz", display_name: "Aprendiz sintético", role: "learner" },
+  { login_name: "sint-administrador", display_name: "Administrador sintético", role: "admin" },
+  { login_name: "sint-formador", display_name: "Formador sintético", role: "instructor" },
+  { login_name: "sint-formando", display_name: "Formando sintético", role: "learner" },
 ];
+
+const SYNTHETIC_COHORT = {
+  slug: "piloto-sintetico",
+  name: "Piloto sintético — programação",
+  track: "developer",
+  summary: "Dados sintéticos em memória. Não é uma turma real.",
+};
 
 async function seedSynthetic(store, env) {
   if (provisioningMode(env) !== "synthetic-local") {
@@ -44,14 +51,14 @@ async function seedSynthetic(store, env) {
     ids[spec.role] = created.id;
   }
 
-  let cohort = await store.findCohortBySlug("piloto-sintetico");
+  let cohort = await store.findCohortBySlug(SYNTHETIC_COHORT.slug);
   if (!cohort) {
     cohort = await store.createCohort({
       id: randomUUID(),
-      slug: "piloto-sintetico",
-      name: "Piloto sintético — developers",
-      track: "developer",
-      summary: "Dados sintéticos em memória. Não é uma turma real.",
+      slug: SYNTHETIC_COHORT.slug,
+      name: SYNTHETIC_COHORT.name,
+      track: SYNTHETIC_COHORT.track,
+      summary: SYNTHETIC_COHORT.summary,
       created_by: ids.admin,
       created_at: new Date().toISOString(),
     });
@@ -79,4 +86,4 @@ async function seedSynthetic(store, env) {
   return { cohort_id: cohort.id, logins: SYNTHETIC_ACCOUNTS.map((item) => item.login_name) };
 }
 
-module.exports = { seedSynthetic, SYNTHETIC_ACCOUNTS };
+module.exports = { seedSynthetic, SYNTHETIC_ACCOUNTS, SYNTHETIC_COHORT };
