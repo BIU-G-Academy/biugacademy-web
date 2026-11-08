@@ -23,6 +23,8 @@ BIU.G Academy may eventually align advanced technical pathways with contributor 
 
 CubeShackles and related projects are separate infrastructure efforts. BIU.G Academy does **not** execute financial transactions or production protocol operations from this website repository.
 
+A learning slice may link to the public CubeShackles organization profile as a reading exercise. It does not call a CubeShackles API. The inventory of what was actually readable is in [../operations/learning-mvp.md](../operations/learning-mvp.md).
+
 Future Phase 5 work is described in [../../ROADMAP.md](../../ROADMAP.md).
 
 ## Contact

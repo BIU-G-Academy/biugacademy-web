@@ -1,8 +1,12 @@
 # Backend deployment
 
+## Current limit (2026-11-07)
+
+Personal-data intake is fail-closed on the learning-MVP branch. `POST /api/waitlist` and `POST /api/support` do not persist. Do not execute the applicant or support release checklist below, and do not send a test applicant through email. That checklist describes the older intake design. It is not permission to collect personal data. Cohort learning deployment, rollback, and the CubeShackles inventory are in [learning-mvp.md](learning-mvp.md).
+
 ## Purpose
 
-Production deployment guide for the BIU.G Academy API (`backend/`). The API is the system of record for applications and website support requests.
+Deployment notes for the BIU.G Academy API (`backend/`). The API is not a live admissions system while intake is closed.
 
 ## Production data path
 
