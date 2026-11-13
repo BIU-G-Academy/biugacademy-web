@@ -8,6 +8,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Security
 
+- Required CI (`.github/workflows/ci.yml`): backend tests against a disposable PostgreSQL service with migration verification, FastAPI security tests, npm and pip dependency audits, gitleaks full-history secret scan (checksum-pinned binary, redacted output), and CodeQL (JavaScript, Python, Actions). Docs lint now runs on every PR and adds a relative-link check. All actions pinned to commit SHAs
+
 - Backend intake no longer fabricates consent or contact data for the legacy simplified payload; consent must be explicitly `true`, and email-only applicants no longer share a placeholder phone number (which also caused false duplicate rejections)
 - `POST /api/waitlist` duplicate responses no longer disclose the existing applicant identifier
 - Email shape check no longer uses a polynomial-backtracking regular expression on untrusted input (CodeQL `js/polynomial-redos`)
