@@ -122,7 +122,7 @@ describe("verification guard", () => {
     fs.writeFileSync(path.join(out, "backend", "server.js"), "x");
     fs.writeFileSync(
       path.join(out, "pt", "leak.html"),
-      'postgresql://user:pw@db/x <a href="/nope/">'
+      'postgresql://user:pw@db/x <a href="/nope/">' // gitleaks:allow (fake fixture)
     );
     const v = verifyArtifact(out, config);
     fs.rmSync(out, { recursive: true, force: true });
