@@ -8,21 +8,23 @@ Institutional documentation for inspectors, partners, and contributors. All docu
 
 ## Directory map
 
-| Folder                         | Purpose                                    |
-| ------------------------------ | ------------------------------------------ |
-| [whitepaper/](whitepaper/)     | Strategic white papers                     |
-| [partnerships/](partnerships/) | Collaboration framework (no implied deals) |
-| [regulatory/](regulatory/)     | Compliance and privacy positions           |
-| [operations/](operations/)     | Cohorts, admissions, deployment            |
-| [curriculum/](curriculum/)     | Learning tracks (under development)        |
-| [metrics/](metrics/)           | Outcomes and reporting framework           |
-| [governance/](governance/)     | Transparency and institutional policy      |
-| [branding/](branding/)         | Visual and communication standards         |
-| [i18n/](i18n/)                 | Translation glossary                       |
-| [vision/](vision/)             | Strategic thesis                           |
-| [architecture/](architecture/) | Technical detail                           |
-| [design/](design/)             | Legacy paths — see branding for guidelines |
-| [community/](community/)       | Contributor roles                          |
+| Folder                                             | Purpose                                        |
+| -------------------------------------------------- | ---------------------------------------------- |
+| [whitepaper/](whitepaper/)                         | Strategic white papers                         |
+| [partnerships/](partnerships/)                     | Collaboration framework (no implied deals)     |
+| [regulatory/](regulatory/)                         | Compliance and privacy positions               |
+| [operations/](operations/)                         | Cohorts, admissions, deployment                |
+| [curriculum/](curriculum/)                         | Learning tracks (under development)            |
+| [metrics/](metrics/)                               | Outcomes and reporting framework               |
+| [governance/](governance/)                         | Transparency and institutional policy          |
+| [branding/](branding/)                             | Visual and communication standards             |
+| [i18n/](i18n/)                                     | Translation glossary                           |
+| [vision/](vision/)                                 | Strategic thesis                               |
+| [architecture/](architecture/)                     | Technical detail                               |
+| [architecture/decisions/](architecture/decisions/) | Architecture decision records (ADR-001 onward) |
+| [operations/runbooks/](operations/runbooks/)       | Step-by-step operational procedures            |
+| [design/](design/)                                 | Legacy paths — see branding for guidelines     |
+| [community/](community/)                           | Contributor roles                              |
 
 ---
 
