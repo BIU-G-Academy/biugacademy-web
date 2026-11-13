@@ -22,8 +22,11 @@ regex = '''\bre_[A-Za-z0-9_]{20,}\b'''
 keywords = ["re_"]
 
 [allowlist]
-description = "Disposable CI database credentials defined in the workflow itself, and <user>:<password> documentation placeholders"
+description = "Known non-secrets: the disposable CI database defined in ci.yml, <user>:<password> documentation placeholders, and the fake fixture in the Pages allowlist tests"
+# Match against the whole finding, not only the captured secret group.
+regexTarget = "match"
 regexes = [
   '''postgresql://ci:ci-disposable@127\.0\.0\.1:5432/biug_ci''',
   '''postgres(?:ql)?://<[^>]+>:<[^>]+>@''',
+  '''postgresql://user:pw@db/x''',
 ]
