@@ -40,11 +40,11 @@ npm run dev
 
 ## Tests and checks
 
-| Command (from `backend/`)   | Notes                                                                                                                                                                                       |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Command (from `backend/`)   | Notes                                                                                                                                                                                                                                            |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `npm test`                  | Node 22+. The API suite needs `DATABASE_URL` pointing at a **disposable** database. On `main` the API suite was removed by PR #7 (it embedded a database password); PR #10 restores it without one. Until PR #10, `npm test` errors on Node ≥ 22 |
-| `npm run audit:gate`        | After PR #10: fails on unreviewed high/critical advisories (`audit-exceptions.json`)                                                                                                        |
-| `python -m pytest tests_py` | After PR #10: FastAPI security regressions (`pip install -r requirements.txt -r requirements-dev.txt`)                                                                                      |
+| `npm run audit:gate`        | After PR #10: fails on unreviewed high/critical advisories (`audit-exceptions.json`)                                                                                                                                                             |
+| `python -m pytest tests_py` | After PR #10: FastAPI security regressions (`pip install -r requirements.txt -r requirements-dev.txt`)                                                                                                                                           |
 
 Repository-wide checks: `npx prettier@3.5.3 --check "**/*.{md,html,css,js,yml,yaml}" --ignore-path .prettierignore` and markdownlint. PR #12 adds CI for all of the above, plus gitleaks, CodeQL and a link check. PR #11 adds `node --test "scripts/site/test/*.test.mjs"`.
 
