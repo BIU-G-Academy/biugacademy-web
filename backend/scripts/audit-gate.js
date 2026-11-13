@@ -59,6 +59,21 @@ function evaluate(audit, exceptions, today) {
   const accepted = [];
   const reported = [];
 
+  // Registry failures also produce JSON. Missing audit evidence must never
+  // become a successful zero-finding report.
+  if (
+    !audit ||
+    typeof audit !== "object" ||
+    Array.isArray(audit) ||
+    audit.error ||
+    !audit.vulnerabilities ||
+    typeof audit.vulnerabilities !== "object" ||
+    Array.isArray(audit.vulnerabilities)
+  ) {
+    failures.push("dependency audit unavailable or malformed; no valid vulnerability report");
+    return { failures, accepted, reported };
+  }
+
   for (const ex of exceptions) {
     if (!ex.expires || ex.expires < today) {
       failures.push(`exception ${ex.advisory} expired on ${ex.expires || "(no expiry)"}`);

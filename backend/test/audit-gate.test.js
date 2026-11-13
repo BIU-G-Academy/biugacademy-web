@@ -22,6 +22,24 @@ const exception = {
 };
 
 describe("audit gate", () => {
+  it("fails closed on registry errors and missing or malformed vulnerability reports", () => {
+    for (const report of [
+      { error: { code: "ENOTFOUND" } },
+      { error: { code: "E503" }, vulnerabilities: {} },
+      {},
+      null,
+      [],
+      { vulnerabilities: null },
+      { vulnerabilities: [] },
+      { vulnerabilities: "invalid" },
+    ]) {
+      assert.ok(evaluate(report, [], "2026-11-13").failures.length > 0);
+    }
+  });
+
+  it("accepts a successful empty vulnerability report", () => {
+    assert.deepEqual(evaluate({ vulnerabilities: {} }, [], "2026-11-13").failures, []);
+  });
   it("accepts high findings covered by a current exception, including transitive ones", () => {
     const r = evaluate(audit, [exception], "2026-11-13");
     assert.deepEqual(r.failures, []);
