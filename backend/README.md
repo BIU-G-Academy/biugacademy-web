@@ -144,13 +144,14 @@ curl -sS -X POST http://localhost:3000/api/waitlist \
 
 ## Scripts
 
-| Script                   | Purpose                             |
-| ------------------------ | ----------------------------------- |
-| `npm run migrate:status` | List applied and pending migrations |
-| `npm run migrate`        | Run pending SQL migrations          |
-| `npm run dev`            | Start API with nodemon              |
-| `npm start`              | Start API in production mode        |
-| `npm test`               | Run test suite                      |
+| Script                   | Purpose                                                                                      |
+| ------------------------ | -------------------------------------------------------------------------------------------- |
+| `npm run migrate:status` | List applied and pending migrations                                                          |
+| `npm run migrate`        | Run pending SQL migrations                                                                   |
+| `npm run dev`            | Start API with nodemon                                                                       |
+| `npm start`              | Start API in production mode                                                                 |
+| `npm test`               | Run test suite (API suite needs `DATABASE_URL` for a disposable DB; otherwise it is skipped) |
+| `npm run audit:gate`     | Fail on unreviewed high/critical production advisories (see `audit-exceptions.json`)         |
 
 ## Security notes
 

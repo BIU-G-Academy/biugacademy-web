@@ -1,0 +1,16 @@
+{
+  "$comment": "Reviewed exceptions for scripts/audit-gate.js. Every entry needs an advisory, the packages it covers, a justification, a mitigation, an owner and an expiry. Expired entries fail the gate. Do not add an entry to make CI green without a review.",
+  "exceptions": [
+    {
+      "advisory": "GHSA-mrhx-c7xc-m3w5",
+      "packages": ["zod", "openai"],
+      "severity": "high",
+      "justification": "The fix is zod 4.x, a major upgrade that changes the error API used by server.js (error.errors -> error.issues). openai is flagged only because it depends on zod; openai is used solely by backend/ai.js, which nothing imports.",
+      "mitigation": "express.json is capped at 256 KB and every array in the waitlist schema is bounded (areas_of_interest max 20), which removes the oversized constrained collection pattern the advisory describes.",
+      "remediation": "Upgrade to zod 4 in the canonical-backend workstream (ADR-002), when the PR #9 learning routes are rebased and their schemas are migrated together.",
+      "owner": "@biu-gholdings",
+      "recorded": "2026-11-13",
+      "expires": "2026-12-31"
+    }
+  ]
+}
