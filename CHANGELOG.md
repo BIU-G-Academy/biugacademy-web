@@ -10,6 +10,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Backend intake no longer fabricates consent or contact data for the legacy simplified payload; consent must be explicitly `true`, and email-only applicants no longer share a placeholder phone number (which also caused false duplicate rejections)
 - `POST /api/waitlist` duplicate responses no longer disclose the existing applicant identifier
+- Email shape check no longer uses a polynomial-backtracking regular expression on untrusted input (CodeQL `js/polynomial-redos`)
 - Legacy FastAPI service: `/ai/*` routes require `X-Service-Token` (fails closed when `AI_SERVICE_TOKEN` is unset); WhatsApp webhook verifies `X-Hub-Signature-256`; secret comparisons are constant-time; inbound WhatsApp messages no longer set broadcast opt-in
 - Dependency audit: non-breaking fixes applied (critical `proxy-addr` resolved), `qs` pinned through `overrides`, remaining `zod` advisory covered by a reviewed, expiring exception enforced by `npm run audit:gate`
 

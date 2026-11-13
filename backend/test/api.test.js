@@ -209,17 +209,18 @@ describe("POST /api/waitlist", { skip: DB_SKIP }, () => {
   });
 
   it("rejects a simplified payload that does not carry consent", async () => {
+    const name = `Simplified No Consent ${Date.now()}`;
     const res = await request("POST", "/api/waitlist", {
-      full_name: "Simplified No Consent",
+      full_name: name,
       contact: `no-consent-${Date.now()}@example.com`,
       interest: "digital",
       motivation: "I want to learn practical digital skills for work in Luanda.",
     });
     assert.equal(res.status, 400);
     const pool = require("../db").getPool();
-    const stored = await pool.query(
-      "SELECT 1 FROM waitlist_applications WHERE full_name = 'Simplified No Consent'"
-    );
+    const stored = await pool.query("SELECT 1 FROM waitlist_applications WHERE full_name = $1", [
+      name,
+    ]);
     assert.equal(stored.rowCount, 0, "nothing may be stored without explicit consent");
   });
 
