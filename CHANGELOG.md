@@ -6,6 +6,17 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Security
+
+- Backend intake no longer fabricates consent or contact data for the legacy simplified payload; consent must be explicitly `true`, and email-only applicants no longer share a placeholder phone number (which also caused false duplicate rejections)
+- `POST /api/waitlist` duplicate responses no longer disclose the existing applicant identifier
+- Legacy FastAPI service: `/ai/*` routes require `X-Service-Token` (fails closed when `AI_SERVICE_TOKEN` is unset); WhatsApp webhook verifies `X-Hub-Signature-256`; secret comparisons are constant-time; inbound WhatsApp messages no longer set broadcast opt-in
+- Dependency audit: non-breaking fixes applied (critical `proxy-addr` resolved), `qs` pinned through `overrides`, remaining `zod` advisory covered by a reviewed, expiring exception enforced by `npm run audit:gate`
+
+### Fixed
+
+- Backend test harness: API suite applies the real migrations instead of the missing `ensureSchema`, skips explicitly without `DATABASE_URL` (fails when `REQUIRE_DATABASE_TESTS=1`), and no longer embeds a fallback database connection string; `npm test` works on Node 22+
+
 ### Added
 
 - Institutional documentation taxonomy: partnerships, governance, metrics, branding, i18n

@@ -19,6 +19,7 @@ const {
 const PORT = Number(process.env.PORT) || 3000;
 const MIN_PHONE_DIGITS = 8;
 const MIN_MOTIVATION_LENGTH = 20;
+const NOT_SPECIFIED = "Not specified";
 
 const PROVINCE_MAP = {
   bengo: "Bengo",
@@ -60,6 +61,7 @@ function phoneDigitsOk(value) {
 function normalizeProvince(value) {
   const raw = String(value || "").trim();
   if (!raw) return "";
+  if (raw === NOT_SPECIFIED) return raw;
   const key = raw.toLowerCase().replace(/\s+/g, " ");
   return PROVINCE_MAP[key] || raw.replace(/\b\w/g, (char) => char.toUpperCase());
 }
@@ -89,7 +91,9 @@ const waitlistBodySchema = z.object({
   education_level: z.string().trim().min(1).max(120),
   areas_of_interest: z.preprocess(
     preprocessInterests,
-    z.array(z.string().trim().min(1).max(100)).min(1)
+    // Bounded: an unbounded constrained array is the memory-exhaustion
+    // pattern in GHSA-mrhx-c7xc-m3w5 (see backend/audit-exceptions.json).
+    z.array(z.string().trim().min(1).max(100)).min(1).max(20)
   ),
   technical_background: z.string().trim().min(1).max(2000),
   internet_access_level: z.string().trim().min(1).max(120),
@@ -127,37 +131,60 @@ function isSimplifiedPayload(body) {
   return body && body.contact && !body.email && !body.phone_number;
 }
 
+/**
+ * Maps the legacy simplified payload ({ contact, interest, motivation, ... })
+ * onto the full intake shape.
+ *
+ * It never invents facts about the applicant:
+ * - consent is copied only from what the applicant actually sent;
+ * - the contact value fills only the matching channel (email OR phone); the
+ *   other channel stays empty instead of receiving a shared placeholder;
+ * - unknown attributes are recorded as "Not specified", never as a guessed
+ *   province, age range or language.
+ */
 function normalizeSimplifiedPayload(body) {
   const contact = String(body.contact || "").trim();
-  const email = looksLikeEmail(contact) ? contact : `pending-${Date.now()}@pending.local`;
-  const phone = looksLikeEmail(contact) ? "+244000000000" : normalizePhone(contact);
+  const contactIsEmail = looksLikeEmail(contact);
+  const phone = contactIsEmail ? "" : normalizePhone(contact);
   return {
     full_name: body.full_name || body.name || "",
-    email,
+    email: contactIsEmail ? contact : "",
     phone_number: phone,
     whatsapp_number: phone,
-    province: normalizeProvince(body.province || "Luanda"),
-    municipality: body.municipality || body.city || "N/A",
-    age_range: body.age_range || "18-24",
-    primary_language: body.primary_language || "Portuguese",
-    education_level: body.education_level || "Not specified",
-    areas_of_interest: [body.interest || "General"],
-    technical_background: body.technical_background || body.current_role || "Not specified",
-    internet_access_level: body.internet_access_level || "Limited",
-    device_access: body.device_access || "Smartphone only",
-    employment_status: body.employment_status || "Not specified",
+    province: body.province ? normalizeProvince(body.province) : NOT_SPECIFIED,
+    municipality: body.municipality || body.city || NOT_SPECIFIED,
+    age_range: body.age_range || NOT_SPECIFIED,
+    primary_language: body.primary_language || NOT_SPECIFIED,
+    education_level: body.education_level || NOT_SPECIFIED,
+    areas_of_interest: [body.interest || NOT_SPECIFIED],
+    technical_background: body.technical_background || body.current_role || NOT_SPECIFIED,
+    internet_access_level: body.internet_access_level || NOT_SPECIFIED,
+    device_access: body.device_access || NOT_SPECIFIED,
+    employment_status: body.employment_status || NOT_SPECIFIED,
     linkedin_optional: body.linkedin_optional || "",
     github_optional: body.github_optional || "",
-    motivation_statement: body.motivation || body.why_join || "Wants to join BIU.G Academy.",
-    consent_checkbox: true,
+    motivation_statement: body.motivation || body.why_join || "",
+    consent_checkbox: body.consent_checkbox ?? body.consent ?? false,
     source_platform: body.source_platform || "website-waitlist",
     browser_language: body.browser_language || "",
     timezone: body.timezone || "",
     referral_source: body.referral_source || "",
     submission_timestamp: body.submission_timestamp || new Date().toISOString(),
-    honeypot: "",
+    honeypot: body.honeypot || "",
   };
 }
+
+// The simplified payload carries a single contact channel, so exactly one of
+// email / phone may be empty. Consent and motivation rules are unchanged.
+const simplifiedWaitlistBodySchema = waitlistBodySchema
+  .extend({
+    email: z.union([z.literal(""), z.string().trim().email().max(320)]),
+    phone_number: z.union([z.literal(""), z.string().trim().max(40).refine(phoneDigitsOk)]),
+  })
+  .refine((v) => v.email !== "" || v.phone_number !== "", {
+    message: "A valid email address or phone number is required",
+    path: ["contact"],
+  });
 
 function buildAllowedOrigins() {
   const raw = (process.env.FRONTEND_ORIGIN || "").trim().replace(/\/+$/, "");
@@ -234,12 +261,13 @@ app.get("/health/email", async (_req, res) => {
 });
 
 app.post("/api/waitlist", publicPostLimiter, async (req, res) => {
-  const input = isSimplifiedPayload(req.body) ? normalizeSimplifiedPayload(req.body) : req.body;
+  const simplified = isSimplifiedPayload(req.body);
+  const input = simplified ? normalizeSimplifiedPayload(req.body) : req.body;
   if (input && String(input.honeypot || "").trim() !== "") {
     return res.status(202).json({ ok: true, status: "accepted" });
   }
 
-  const parsed = waitlistBodySchema.safeParse(input);
+  const parsed = (simplified ? simplifiedWaitlistBodySchema : waitlistBodySchema).safeParse(input);
   if (!parsed.success) {
     return res.status(400).json({
       success: false,
@@ -252,7 +280,7 @@ app.post("/api/waitlist", publicPostLimiter, async (req, res) => {
   const row = {
     full_name: b.full_name.trim(),
     email: b.email.trim().toLowerCase(),
-    phone_number: normalizePhone(b.phone_number),
+    phone_number: b.phone_number ? normalizePhone(b.phone_number) : "",
     whatsapp_number: b.whatsapp_number ? normalizePhone(b.whatsapp_number) : "",
     province: normalizeProvince(b.province),
     municipality: b.municipality.trim(),
@@ -267,7 +295,8 @@ app.post("/api/waitlist", publicPostLimiter, async (req, res) => {
     linkedin_optional: b.linkedin_optional,
     github_optional: b.github_optional,
     motivation_statement: b.motivation_statement.trim(),
-    consent_checkbox: true,
+    // Validation above rejects anything other than an explicit `true`.
+    consent_checkbox: b.consent_checkbox === true,
     source_platform: b.source_platform.trim(),
     browser_language: (b.browser_language || req.headers["accept-language"] || "")
       .toString()
@@ -288,18 +317,22 @@ app.post("/api/waitlist", publicPostLimiter, async (req, res) => {
       `${row.email}|${row.phone_number}`,
     ]);
 
+    // Match only on channels the applicant actually provided. An empty phone
+    // or email must never match other applicants' empty values.
     const duplicate = await client.query(
-      `SELECT id FROM waitlist_applications
-       WHERE lower(email) = lower($1) OR phone_number = $2
-       ORDER BY created_at DESC LIMIT 1`,
+      `SELECT 1 FROM waitlist_applications
+       WHERE ($1 <> '' AND lower(email) = lower($1))
+          OR ($2 <> '' AND phone_number = $2)
+       LIMIT 1`,
       [row.email, row.phone_number]
     );
     if (duplicate.rowCount > 0) {
       await client.query("ROLLBACK");
+      // Do not return the existing record's identifier: anyone who knows an
+      // email address or phone number could otherwise retrieve it.
       return res.status(409).json({
         success: false,
         error: "Duplicate submission detected. Your application is already in review.",
-        applicant_id: duplicate.rows[0].id,
       });
     }
 
