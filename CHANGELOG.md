@@ -30,6 +30,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Learning MVP under development, not operational: server sessions, learner/instructor/admin authorization, cohorts, assignments, progress, two earned badges, and cohort insight (`backend/learning/`, `portal/learn/`)
 - CubeShackles adapter inventory that stays non-callable (`backend/cubeshackles/adapters.js`, `docs/operations/learning-mvp.md`)
 - Forward migration `backend/migrations/004_academy_learning.sql` and an unapplied rollback script in `backend/rollback/`
+- Governance baseline for Master Execution Directive 001: PR reconciliation register, ADR-002 to ADR-010 (canonical backend, identity and recovery, RBAC and cohort isolation, privacy controls, audit logging, auditable AI, CubeShackles sandbox, documentation taxonomy, PR provenance), credential exposure review, branch-protection guide, release gate report, documentation ownership matrix and migration plan
 
 - Institutional documentation taxonomy: partnerships, governance, metrics, branding, i18n
 - Root `ARCHITECTURE.md` with system overview and Mermaid diagrams
@@ -51,6 +52,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Intake Worker dev dependencies: `wrangler` 4.156.0, `puppeteer-core` 25.16.0 (npm audit 12 findings → 0)
 - Learning MVP from PR #9 (sessions, roles, cohorts, progress, badges) rebased onto the merged #7/#10 baseline: intake endpoints stay hard-closed by `learning/gates.js`; #10's intake persistence tests moved to `backend/test/intake-persistence.test.js` (gate opened in the test process only); the learning suite now also runs against the PostgreSQL store (`backend/test/learning-pg.test.js`)
 - `POST /api/waitlist` and `POST /api/support` fail closed and do not persist personal data. Public copy remains "As candidaturas ainda não estão abertas." / "Applications are not open yet."
+- `AGENTS.md` rewritten to match the code and current governance; the committed local development database connection string is removed
 
 - `README.md`, `ROADMAP.md`, `CONTRIBUTING.md`, `GOVERNANCE.md`, `SECURITY.md` — institutional upgrade
 - Roadmap rephased to Phases 0–6 (website → partnerships)

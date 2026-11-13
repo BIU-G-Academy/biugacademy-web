@@ -1,55 +1,60 @@
 # AGENTS.md
 
-## Cursor Cloud specific instructions
+Instructions for coding agents (Cursor, Claude Code and others) working in this repository.
 
-### Project Overview
+## Rules that override everything else
 
-BIU.G Academy is an Angola-first technical education platform with an AI-powered waitlist intake system. It consists of:
+- **Merging to `main` deploys the public site.** GitHub Pages serves `main`. Never merge, close PRs, change repository or Pages settings, or touch production data without explicit founder authorization.
+- **Every open PR has a recorded disposition** in [docs/governance/pr-reconciliation-register.md](docs/governance/pr-reconciliation-register.md). Read it before touching files those PRs edit. Do not overwrite other PRs' work; follow [ADR-010](docs/architecture/decisions/ADR-010-pr-reconciliation-and-provenance.md) for provenance.
+- **Personal-data intake is closed** (founder directive, PR #7, merged 2026-11-13). Do not reopen forms or add data collection. Reopening is gate G3 in [ADR-005](docs/architecture/decisions/ADR-005-privacy-controls.md).
+- **Never commit credentials**, including local development passwords. Use `backend/.env` (git-ignored) and placeholders such as `postgresql://<user>:<password>@127.0.0.1:5432/<db>` in documentation.
+- **Evidence:** report a test as passing only if you ran it. Say which tests you did not run.
+- Follow the PR checklist in [CONTRIBUTING.md](CONTRIBUTING.md): labels, milestone, CHANGELOG, and docs registered in [docs/README.md](docs/README.md).
 
-- **Express/Node.js backend** (`backend/server.js`) — primary API with `POST /api/waitlist` and `GET /api/health`
-- **FastAPI/Python backend** (`backend/fastapi_intake.py`) — extended API with intake, coaching, check-in, nudge, and WhatsApp webhook endpoints
-- **Static HTML frontend** (root directory) — multilingual marketing site served as static files
+## Project overview
 
-### Running Services
+BIU.G Academy is an Angola-first technical education initiative (under development). The repository contains:
 
-**Express backend** (port 3000):
+- **Static site** (repository root: `pt/`, `en/`, `fr/`, `css/`, `js/`, `portal/` …), multilingual, served by GitHub Pages.
+- **Express + PostgreSQL backend** (`backend/server.js`): `POST /api/waitlist`, `POST /api/support`, health endpoints, and a transactional email outbox. This is the proposed canonical backend ([ADR-002](docs/architecture/decisions/ADR-002-canonical-backend.md)). It is not deployed by Pages.
+- **FastAPI experiment** (`backend/fastapi_intake.py`): legacy intake, coach and WhatsApp endpoints on SQLite. Frozen, and to be retired under ADR-002.
+- **Google Apps Script** (`google-apps-script/`): legacy intake bridge, to be retired.
 
-```bash
-cd backend && npm run dev
-```
+Architecture decisions: [docs/architecture/decisions/](docs/architecture/decisions/README.md).
 
-**FastAPI backend** (port 8000):
+## Running locally
 
-```bash
-cd backend && uvicorn fastapi_intake:app --host 0.0.0.0 --port 8000 --reload
-```
+**Static site** (port 8080): `python3 -m http.server 8080`, then open `/pt/`.
 
-Requires env vars: `DATABASE_URL`, `OPENAI_API_KEY`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET`.
-
-**Static frontend** (port 8080):
-
-```bash
-python3 -m http.server 8080
-```
-
-### PostgreSQL Setup
-
-The Express backend requires PostgreSQL. Start it with:
+**Express backend** (port 3000) needs PostgreSQL and a database you create locally:
 
 ```bash
-pg_ctlcluster 16 main start
+cd backend
+cp .env.example .env            # set DATABASE_URL to your own local database
+npm ci
+npm run migrate && npm run migrate:status
+npm run dev
 ```
 
-Local dev database: `[REDACTED]`
+**FastAPI experiment** (port 8000): `cd backend && uvicorn fastapi_intake:app --port 8000 --reload`. `config_loader.py` refuses to start unless `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET`, `OPENAI_API_KEY` and `DATABASE_URL` are all set (placeholders are fine locally). Default storage is SQLite.
 
-### Known Gotchas
+## Tests and checks
 
-- **`current_role` is a PostgreSQL reserved keyword.** The `schema.sql` and `server.js` INSERT query must quote it as `"current_role"`. Without this fix, `ensureSchema()` and the waitlist INSERT will fail with a syntax error.
-- **Express backend requires a real `OPENAI_API_KEY`** for full waitlist submission flow. Without it, the app starts fine and validation works, but submissions return 502 after the DB insert (the insert is then rolled back).
-- **FastAPI backend uses SQLite by default** (`sqlite:///./biug_academy.db`) and its `/ai/intake` endpoint uses a deterministic scorer (no OpenAI dependency), so it works without API keys for basic intake testing.
-- **FastAPI `config_loader.py` requires all WhatsApp env vars** to be set (even placeholder values) or the app will refuse to start.
-- **No lint or test scripts** are defined in `package.json`. There are no automated tests or linting configurations in this repository.
+| Command (from `backend/`)   | Notes                                                                                                                                                                                       |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm test`                  | Node 22+. The API suite needs `DATABASE_URL` pointing at a **disposable** database. On `main` the API suite was removed by PR #7 (it embedded a database password); PR #10 restores it without one. Until PR #10, `npm test` errors on Node ≥ 22 |
+| `npm run audit:gate`        | After PR #10: fails on unreviewed high/critical advisories (`audit-exceptions.json`)                                                                                                        |
+| `python -m pytest tests_py` | After PR #10: FastAPI security regressions (`pip install -r requirements.txt -r requirements-dev.txt`)                                                                                      |
 
-### Environment Variables
+Repository-wide checks: `npx prettier@3.5.3 --check "**/*.{md,html,css,js,yml,yaml}" --ignore-path .prettierignore` and markdownlint. PR #12 adds CI for all of the above, plus gitleaks, CodeQL and a link check. PR #11 adds `node --test "scripts/site/test/*.test.mjs"`.
 
-Copy `backend/.env.example` to `backend/.env` and fill in values. See `backend/README.md` for details.
+## Known gotchas
+
+- **`npm test` on Node ≥ 22:** `node --test test/` treats the directory as a module. Use a glob (fixed in PR #10).
+- **The whole repository root is publicly served** until the Pages allowlist cutover (ADR-001, PR #11). Anything you commit appears on `biugacademy.org`.
+- **`AI_SERVICE_TOKEN`** (after PR #10): the FastAPI `/ai/*` routes return 503 unless it is set to at least 32 characters, and 401 without a matching `X-Service-Token` header.
+- **`backend/ai.js`** (OpenAI classifier) is not imported by anything. The Express intake does not call OpenAI.
+
+## Environment variables
+
+Copy `backend/.env.example` to `backend/.env`. See `backend/README.md`. Credential handling: [docs/security/credential-exposure-review.md](docs/security/credential-exposure-review.md).

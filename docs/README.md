@@ -8,23 +8,25 @@ Institutional documentation for inspectors, partners, and contributors. All docu
 
 ## Directory map
 
-| Folder                                             | Purpose                                        |
-| -------------------------------------------------- | ---------------------------------------------- |
-| [whitepaper/](whitepaper/)                         | Strategic white papers                         |
-| [partnerships/](partnerships/)                     | Collaboration framework (no implied deals)     |
-| [regulatory/](regulatory/)                         | Compliance and privacy positions               |
-| [operations/](operations/)                         | Cohorts, admissions, deployment                |
-| [curriculum/](curriculum/)                         | Learning tracks (under development)            |
-| [metrics/](metrics/)                               | Outcomes and reporting framework               |
-| [governance/](governance/)                         | Transparency and institutional policy          |
-| [branding/](branding/)                             | Visual and communication standards             |
-| [i18n/](i18n/)                                     | Translation glossary                           |
-| [vision/](vision/)                                 | Strategic thesis                               |
-| [architecture/](architecture/)                     | Technical detail                               |
-| [architecture/decisions/](architecture/decisions/) | Architecture decision records (ADR-001 onward) |
-| [operations/runbooks/](operations/runbooks/)       | Step-by-step operational procedures            |
-| [design/](design/)                                 | Legacy paths — see branding for guidelines     |
-| [community/](community/)                           | Contributor roles                              |
+| Folder                                                      | Purpose                                         |
+| ----------------------------------------------------------- | ----------------------------------------------- |
+| [whitepaper/](whitepaper/)                                  | Strategic white papers                          |
+| [partnerships/](partnerships/)                              | Collaboration framework (no implied deals)      |
+| [regulatory/](regulatory/)                                  | Compliance and privacy positions                |
+| [operations/](operations/)                                  | Cohorts, admissions, deployment                 |
+| [curriculum/](curriculum/)                                  | Learning tracks (under development)             |
+| [metrics/](metrics/)                                        | Outcomes and reporting framework                |
+| [governance/](governance/)                                  | Transparency and institutional policy           |
+| [branding/](branding/)                                      | Visual and communication standards              |
+| [i18n/](i18n/)                                              | Translation glossary                            |
+| [vision/](vision/)                                          | Strategic thesis                                |
+| [architecture/](architecture/)                              | Technical detail                                |
+| [architecture/decisions/](architecture/decisions/README.md) | Architecture decision records (ADR-001 onward)  |
+| [operations/runbooks/](operations/runbooks/)                | Step-by-step operational procedures             |
+| [design/](design/)                                          | Legacy paths — see branding for guidelines      |
+| [community/](community/)                                    | Contributor roles                               |
+| [security/](security/)                                      | Credential review, controls (branch protection) |
+| [releases/](releases/)                                      | Release gate reports                            |
 
 ---
 
@@ -40,12 +42,29 @@ Institutional documentation for inspectors, partners, and contributors. All docu
 
 ---
 
+## Governance and assurance
+
+| Document                                                                                     | Purpose                                                      |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [governance/pr-reconciliation-register.md](governance/pr-reconciliation-register.md)         | Every open PR: overlap, risk, evidence, disposition          |
+| [architecture/decisions/README.md](architecture/decisions/README.md)                         | ADR index and statuses                                       |
+| [releases/release-gate-report-2026-11-13.md](releases/release-gate-report-2026-11-13.md)     | Baseline test evidence and G0–G4 gate status                 |
+| [security/credential-exposure-review.md](security/credential-exposure-review.md)             | Credential exposure findings and rotation inventory          |
+| [security/controls/branch-protection.md](security/controls/branch-protection.md)             | Required checks and `main` protection settings               |
+| [governance/documentation-ownership-matrix.md](governance/documentation-ownership-matrix.md) | Owner, target location and review cadence for every document |
+| [governance/documentation-migration-plan.md](governance/documentation-migration-plan.md)     | Canonical taxonomy migration batches and supersession log    |
+
+The canonical taxonomy is defined in [ADR-009](architecture/decisions/ADR-009-documentation-taxonomy.md). Existing documents move in batches after open PRs are reconciled.
+
+---
+
 ## Root policy files
 
 - [../README.md](../README.md)
 - [../GOVERNANCE.md](../GOVERNANCE.md)
 - [../ROADMAP.md](../ROADMAP.md)
 - [../SECURITY.md](../SECURITY.md)
+- [../AGENTS.md](../AGENTS.md) (instructions for coding agents)
 
 ---
 
