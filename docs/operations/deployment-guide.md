@@ -60,7 +60,7 @@ Detail checklist: see repository `CNAME` and GitHub **Settings → Pages**.
 
 - **Never** commit `.env`, API keys, or intake credentials
 - Configure intake bridges (e.g. Google Apps Script) in provider consoles
-- See `backend/.env.example` for local experiments only
+- Do not add server env files to the public site tree
 
 ---
 

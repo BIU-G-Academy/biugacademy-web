@@ -2,7 +2,7 @@
 
 ## Status
 
-**Not deployed in production.** Any experimental prompts or scripts in `backend/` are research-only until promoted on [ROADMAP.md](../../ROADMAP.md) Phase 4.
+**Not deployed in production.** Experimental prompts or scripts are research-only until promoted on [ROADMAP.md](../../ROADMAP.md) Phase 4.
 
 ## Intended role (assistive only)
 

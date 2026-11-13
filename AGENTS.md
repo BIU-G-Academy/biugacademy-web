@@ -40,7 +40,7 @@ The Express backend requires PostgreSQL. Start it with:
 pg_ctlcluster 16 main start
 ```
 
-Local dev database: `postgresql://biug:biug_dev_pass@127.0.0.1:5432/biug_academy`
+Local dev database: `[REDACTED]`
 
 ### Known Gotchas
 

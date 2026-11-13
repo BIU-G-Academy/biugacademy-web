@@ -61,7 +61,7 @@ When APIs and databases deploy:
 - No full PII in application logs
 - Human-in-the-loop for AI-assisted admissions review
 
-Experimental `backend/` code is not production infrastructure.
+The public site does not ship a production API.
 
 ---
 
