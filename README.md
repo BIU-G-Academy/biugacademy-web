@@ -73,7 +73,7 @@ Capabilities are labeled consistently across the repository:
 
 ## Architecture summary
 
-Static HTML/CSS/JavaScript served from GitHub Pages. Optional external intake bridge for forms. Experimental backend code in `backend/` is **not** production infrastructure.
+Static HTML/CSS/JavaScript served from GitHub Pages. Application pages on the public site are closed and do not collect personal data.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) and [docs/architecture/website-architecture.md](docs/architecture/website-architecture.md).
 
@@ -113,7 +113,7 @@ python3 -m http.server 8080
 
 Details: [docs/operations/deployment-guide.md](docs/operations/deployment-guide.md) (local preview section).
 
-Optional: `backend/` experiments — see `backend/.env.example`; never commit secrets.
+Do not commit secrets.
 
 ---
 

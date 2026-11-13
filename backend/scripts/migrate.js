@@ -29,7 +29,7 @@ async function getAppliedMigrations(pool) {
   return new Set(rows.map((row) => row.filename));
 }
 
-async function applyMigration(pool, filename) {
+async function applyMigration(pool, filename, log = console.log) {
   const migrationPath = path.join(MIGRATIONS_DIR, filename);
   const sql = fs.readFileSync(migrationPath, "utf8");
   const client = await pool.connect();
@@ -38,13 +38,35 @@ async function applyMigration(pool, filename) {
     await client.query(sql);
     await client.query("INSERT INTO schema_migrations (filename) VALUES ($1)", [filename]);
     await client.query("COMMIT");
-    console.log(`Applied migration: ${filename}`);
+    log(`Applied migration: ${filename}`);
   } catch (error) {
     await client.query("ROLLBACK");
     throw new Error(`Migration failed (${filename}): ${error.message}`);
   } finally {
     client.release();
   }
+}
+
+/**
+ * Applies every pending migration in filename order. Each file runs in its own
+ * transaction. Used by the CLI below and by the test harness, so tests run
+ * against the same schema history as every other environment.
+ */
+async function applyPendingMigrations(pool, { log = console.log } = {}) {
+  await ensureMigrationsTable(pool);
+  const files = getMigrationFiles();
+  const applied = await getAppliedMigrations(pool);
+  const newlyApplied = [];
+
+  for (const file of files) {
+    if (applied.has(file)) {
+      log(`Skipping already applied migration: ${file}`);
+      continue;
+    }
+    await applyMigration(pool, file, log);
+    newlyApplied.push(file);
+  }
+  return { total: files.length, applied: newlyApplied };
 }
 
 async function runMigrations() {
@@ -66,21 +88,10 @@ async function runMigrations() {
     await pool.query("SELECT 1");
     console.log("Database connection ok.");
 
-    await ensureMigrationsTable(pool);
-    const files = getMigrationFiles();
-    const applied = await getAppliedMigrations(pool);
-
-    if (files.length === 0) {
+    const result = await applyPendingMigrations(pool);
+    if (result.total === 0) {
       console.log("No migration files found.");
       return;
-    }
-
-    for (const file of files) {
-      if (applied.has(file)) {
-        console.log(`Skipping already applied migration: ${file}`);
-        continue;
-      }
-      await applyMigration(pool, file);
     }
 
     console.log("Migrations completed successfully.");
@@ -95,3 +106,5 @@ async function runMigrations() {
 if (require.main === module) {
   runMigrations();
 }
+
+module.exports = { applyPendingMigrations, getMigrationFiles };

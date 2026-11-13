@@ -5,13 +5,14 @@ from typing import List, Literal
 
 import os
 
-from fastapi import FastAPI, Header, HTTPException, Request, Response
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
 from openai import OpenAI
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 
 from config_loader import Settings, load_settings
 from ai_intake_service import is_phone_contact, normalize_phone, save_score_to_applicant, score_applicant
+from service_security import require_service_token, secrets_match, valid_meta_signature
 from sqlite_store import init_db
 from sqlalchemy_models import Applicant, CohortEvent, MessageLog, SessionLocal, init_sqlalchemy_tables
 from whatsapp_service import configure_whatsapp_service, send_whatsapp_text
@@ -363,7 +364,7 @@ def call_coach_llm(track: str, goal: str, module_id: str, module_content: dict) 
         raise HTTPException(status_code=502, detail="LLM response missing required fields.") from exc
 
 
-@app.post("/ai/intake", response_model=IntakeResponse)
+@app.post("/ai/intake", response_model=IntakeResponse, dependencies=[Depends(require_service_token)])
 def ai_intake(payload: IntakeRequest) -> IntakeResponse:
     contact_clean = payload.contact.strip()
     phone_norm = normalize_phone(contact_clean)
@@ -414,7 +415,7 @@ def ai_intake(payload: IntakeRequest) -> IntakeResponse:
     )
 
 
-@app.post("/ai/coach", response_model=CoachResponse)
+@app.post("/ai/coach", response_model=CoachResponse, dependencies=[Depends(require_service_token)])
 def ai_coach(payload: CoachRequest) -> CoachResponse:
     module_id = payload.module_id.strip()
 
@@ -435,7 +436,7 @@ def ai_coach(payload: CoachRequest) -> CoachResponse:
     )
 
 
-@app.post("/ai/checkin", response_model=CheckinResponse)
+@app.post("/ai/checkin", response_model=CheckinResponse, dependencies=[Depends(require_service_token)])
 def ai_checkin(payload: CheckinRequest) -> CheckinResponse:
     with SessionLocal() as db:
         applicant = db.get(Applicant, payload.applicant_id)
@@ -464,7 +465,7 @@ def ai_checkin(payload: CheckinRequest) -> CheckinResponse:
     return CheckinResponse(status=status, response=response_text)
 
 
-@app.post("/ai/nudge", response_model=NudgeResponse)
+@app.post("/ai/nudge", response_model=NudgeResponse, dependencies=[Depends(require_service_token)])
 def ai_nudge(payload: NudgeRequest) -> NudgeResponse:
     task = payload.task.strip()
     return NudgeResponse(message=generate_nudge_message(payload.status, task))
@@ -476,15 +477,23 @@ def verify_whatsapp_webhook(request: Request):
     token = request.query_params.get("hub.verify_token", "")
     challenge = request.query_params.get("hub.challenge", "")
 
-    if mode == "subscribe" and SETTINGS and token == SETTINGS.whatsapp_verify_token:
+    if mode == "subscribe" and SETTINGS and secrets_match(token, SETTINGS.whatsapp_verify_token):
         return Response(content=challenge, media_type="text/plain", status_code=200)
     return Response(content="forbidden", media_type="text/plain", status_code=403)
 
 
 @app.post("/webhooks/whatsapp")
 async def inbound_whatsapp_webhook(request: Request):
+    # Meta signs every delivery with the app secret. Reject anything unsigned
+    # or mis-signed before parsing, so forged deliveries cannot create
+    # applicants, write message logs or trigger outbound WhatsApp messages.
+    raw_body = await request.body()
+    app_secret = SETTINGS.whatsapp_app_secret if SETTINGS else None
+    if not valid_meta_signature(raw_body, request.headers.get("X-Hub-Signature-256"), app_secret):
+        return Response(content="invalid signature", media_type="text/plain", status_code=401)
+
     try:
-        payload = await request.json()
+        payload = json.loads(raw_body or b"{}")
     except Exception:
         payload = {}
 
@@ -518,7 +527,9 @@ async def inbound_whatsapp_webhook(request: Request):
                         ai_score=0,
                         ai_track="digital",
                         cohort_status="pending",
-                        whatsapp_opt_in=True,
+                        # Sending us a message is not consent to broadcasts.
+                        # Opt-in is recorded only from an explicit consent field.
+                        whatsapp_opt_in=False,
                     )
                     db.add(applicant)
                     db.flush()
@@ -552,7 +563,7 @@ def admin_broadcast_weekly_task(
     expected_secret = os.getenv("ADMIN_SECRET", "").strip()
     if not expected_secret:
         raise HTTPException(status_code=500, detail="ADMIN_SECRET not configured.")
-    if admin_secret != expected_secret:
+    if not secrets_match(admin_secret, expected_secret):
         raise HTTPException(status_code=403, detail="Forbidden")
 
     modules = load_modules()

@@ -9,10 +9,11 @@
     "migrate:status": "node scripts/migrate-status.js",
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "node --test test/"
+    "test": "node --test \"test/**/*.test.js\"",
+    "audit:gate": "node scripts/audit-gate.js"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -26,5 +27,8 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
+  },
+  "overrides": {
+    "qs": "6.16.2"
   }
 }
