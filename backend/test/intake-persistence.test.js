@@ -118,158 +118,162 @@ describe("GET /api/health (intake persistence harness)", { skip: DB_SKIP }, () =
   });
 });
 
-describe("POST /api/waitlist persistence path (gate opened in test only)", { skip: DB_SKIP }, () => {
-  it("returns 400 on empty body", async () => {
-    const res = await request("POST", "/api/waitlist", {});
-    assert.equal(res.status, 400);
-    assert.equal(res.body.success, false);
-  });
+describe(
+  "POST /api/waitlist persistence path (gate opened in test only)",
+  { skip: DB_SKIP },
+  () => {
+    it("returns 400 on empty body", async () => {
+      const res = await request("POST", "/api/waitlist", {});
+      assert.equal(res.status, 400);
+      assert.equal(res.body.success, false);
+    });
 
-  it("returns 201 for valid intake payload", async () => {
-    const payload = {
-      full_name: "Test Applicant",
-      email: "test-" + Date.now() + "@example.com",
-      phone_number: uniquePhone(),
-      whatsapp_number: "",
-      province: "Luanda",
-      municipality: "Luanda",
-      age_range: "25-34",
-      primary_language: "Portuguese",
-      education_level: "Secondary",
-      areas_of_interest: ["financial-literacy", "digital-skills"],
-      technical_background: "Basic digital tools and customer support",
-      internet_access_level: "Mobile data only",
-      device_access: "Smartphone only",
-      employment_status: "Informal worker",
-      linkedin_optional: "",
-      github_optional: "",
-      motivation_statement:
-        "I want to improve my practical skills to grow income opportunities and support my family.",
-      consent_checkbox: true,
-      source_platform: "biugacademy-web",
-      browser_language: "pt-AO",
-      timezone: "Africa/Luanda",
-      referral_source: "website-home",
-      submission_timestamp: new Date().toISOString(),
-      honeypot: "",
-    };
+    it("returns 201 for valid intake payload", async () => {
+      const payload = {
+        full_name: "Test Applicant",
+        email: "test-" + Date.now() + "@example.com",
+        phone_number: uniquePhone(),
+        whatsapp_number: "",
+        province: "Luanda",
+        municipality: "Luanda",
+        age_range: "25-34",
+        primary_language: "Portuguese",
+        education_level: "Secondary",
+        areas_of_interest: ["financial-literacy", "digital-skills"],
+        technical_background: "Basic digital tools and customer support",
+        internet_access_level: "Mobile data only",
+        device_access: "Smartphone only",
+        employment_status: "Informal worker",
+        linkedin_optional: "",
+        github_optional: "",
+        motivation_statement:
+          "I want to improve my practical skills to grow income opportunities and support my family.",
+        consent_checkbox: true,
+        source_platform: "biugacademy-web",
+        browser_language: "pt-AO",
+        timezone: "Africa/Luanda",
+        referral_source: "website-home",
+        submission_timestamp: new Date().toISOString(),
+        honeypot: "",
+      };
 
-    const res = await request("POST", "/api/waitlist", payload);
+      const res = await request("POST", "/api/waitlist", payload);
 
-    assert.equal(
-      res.status,
-      201,
-      `Expected 201 but got ${res.status}: ${JSON.stringify(res.body)}`
-    );
-    assert.equal(res.body.ok, true);
-    assert.ok(res.body.applicant_id, "applicant_id must be present");
-    assert.equal(res.body.status, "received");
-  });
+      assert.equal(
+        res.status,
+        201,
+        `Expected 201 but got ${res.status}: ${JSON.stringify(res.body)}`
+      );
+      assert.equal(res.body.ok, true);
+      assert.ok(res.body.applicant_id, "applicant_id must be present");
+      assert.equal(res.body.status, "received");
+    });
 
-  it("returns 409 for duplicate email or phone", async () => {
-    const payload = {
-      full_name: "Duplicate Applicant",
-      email: "duplicate-" + Date.now() + "@example.com",
-      phone_number: uniquePhone(),
-      whatsapp_number: "",
-      province: "Luanda",
-      municipality: "Belas",
-      age_range: "25-34",
-      primary_language: "Portuguese",
-      education_level: "Secondary",
-      areas_of_interest: ["digital-skills"],
-      technical_background: "Beginner",
-      internet_access_level: "Mobile data only",
-      device_access: "Smartphone only",
-      employment_status: "Seeking employment",
-      linkedin_optional: "",
-      github_optional: "",
-      motivation_statement:
-        "I want to join this cohort and improve practical capabilities for the local economy.",
-      consent_checkbox: true,
-      source_platform: "biugacademy-web",
-      browser_language: "pt-AO",
-      timezone: "Africa/Luanda",
-      referral_source: "website",
-      submission_timestamp: new Date().toISOString(),
-      honeypot: "",
-    };
+    it("returns 409 for duplicate email or phone", async () => {
+      const payload = {
+        full_name: "Duplicate Applicant",
+        email: "duplicate-" + Date.now() + "@example.com",
+        phone_number: uniquePhone(),
+        whatsapp_number: "",
+        province: "Luanda",
+        municipality: "Belas",
+        age_range: "25-34",
+        primary_language: "Portuguese",
+        education_level: "Secondary",
+        areas_of_interest: ["digital-skills"],
+        technical_background: "Beginner",
+        internet_access_level: "Mobile data only",
+        device_access: "Smartphone only",
+        employment_status: "Seeking employment",
+        linkedin_optional: "",
+        github_optional: "",
+        motivation_statement:
+          "I want to join this cohort and improve practical capabilities for the local economy.",
+        consent_checkbox: true,
+        source_platform: "biugacademy-web",
+        browser_language: "pt-AO",
+        timezone: "Africa/Luanda",
+        referral_source: "website",
+        submission_timestamp: new Date().toISOString(),
+        honeypot: "",
+      };
 
-    const first = await request("POST", "/api/waitlist", payload);
-    assert.equal(first.status, 201);
+      const first = await request("POST", "/api/waitlist", payload);
+      assert.equal(first.status, 201);
 
-    const second = await request("POST", "/api/waitlist", payload);
-    assert.equal(second.status, 409);
-    assert.equal(second.body.success, false);
-    assert.equal(
-      second.body.applicant_id,
-      undefined,
-      "a duplicate response must not disclose the existing applicant identifier"
-    );
-    assert.doesNotMatch(JSON.stringify(second.body), /[0-9a-f]{8}-[0-9a-f]{4}-/i);
-  });
+      const second = await request("POST", "/api/waitlist", payload);
+      assert.equal(second.status, 409);
+      assert.equal(second.body.success, false);
+      assert.equal(
+        second.body.applicant_id,
+        undefined,
+        "a duplicate response must not disclose the existing applicant identifier"
+      );
+      assert.doesNotMatch(JSON.stringify(second.body), /[0-9a-f]{8}-[0-9a-f]{4}-/i);
+    });
 
-  it("rejects a full payload whose consent is not explicitly true", async () => {
-    for (const consent of [false, "false", "", undefined]) {
+    it("rejects a full payload whose consent is not explicitly true", async () => {
+      for (const consent of [false, "false", "", undefined]) {
+        const res = await request("POST", "/api/waitlist", {
+          ...fullPayload(),
+          consent_checkbox: consent,
+        });
+        assert.equal(res.status, 400, `consent=${JSON.stringify(consent)} must be rejected`);
+      }
+    });
+
+    it("rejects a simplified payload that does not carry consent", async () => {
+      const name = `Simplified No Consent ${Date.now()}`;
       const res = await request("POST", "/api/waitlist", {
-        ...fullPayload(),
-        consent_checkbox: consent,
+        full_name: name,
+        contact: `no-consent-${Date.now()}@example.com`,
+        interest: "digital",
+        motivation: "I want to learn practical digital skills for work in Luanda.",
       });
-      assert.equal(res.status, 400, `consent=${JSON.stringify(consent)} must be rejected`);
-    }
-  });
-
-  it("rejects a simplified payload that does not carry consent", async () => {
-    const name = `Simplified No Consent ${Date.now()}`;
-    const res = await request("POST", "/api/waitlist", {
-      full_name: name,
-      contact: `no-consent-${Date.now()}@example.com`,
-      interest: "digital",
-      motivation: "I want to learn practical digital skills for work in Luanda.",
-    });
-    assert.equal(res.status, 400);
-    const pool = require("../db").getPool();
-    const stored = await pool.query("SELECT 1 FROM waitlist_applications WHERE full_name = $1", [
-      name,
-    ]);
-    assert.equal(stored.rowCount, 0, "nothing may be stored without explicit consent");
-  });
-
-  it("does not fabricate contact data or applicant attributes for simplified payloads", async () => {
-    const stamp = Date.now();
-    const make = (n) => ({
-      full_name: `Simplified Email ${stamp}-${n}`,
-      contact: `simplified-${stamp}-${n}@example.com`,
-      interest: "digital",
-      motivation: "I want to learn practical digital skills for work in Luanda.",
-      consent: true,
+      assert.equal(res.status, 400);
+      const pool = require("../db").getPool();
+      const stored = await pool.query("SELECT 1 FROM waitlist_applications WHERE full_name = $1", [
+        name,
+      ]);
+      assert.equal(stored.rowCount, 0, "nothing may be stored without explicit consent");
     });
 
-    // Two different email-only applicants must not collide on a shared placeholder phone.
-    const a = await request("POST", "/api/waitlist", make(1));
-    const b = await request("POST", "/api/waitlist", make(2));
-    assert.equal(a.status, 201, JSON.stringify(a.body));
-    assert.equal(b.status, 201, JSON.stringify(b.body));
+    it("does not fabricate contact data or applicant attributes for simplified payloads", async () => {
+      const stamp = Date.now();
+      const make = (n) => ({
+        full_name: `Simplified Email ${stamp}-${n}`,
+        contact: `simplified-${stamp}-${n}@example.com`,
+        interest: "digital",
+        motivation: "I want to learn practical digital skills for work in Luanda.",
+        consent: true,
+      });
 
-    const pool = require("../db").getPool();
-    const { rows } = await pool.query(
-      `SELECT email, phone_number, age_range, province, primary_language, consent_checkbox
+      // Two different email-only applicants must not collide on a shared placeholder phone.
+      const a = await request("POST", "/api/waitlist", make(1));
+      const b = await request("POST", "/api/waitlist", make(2));
+      assert.equal(a.status, 201, JSON.stringify(a.body));
+      assert.equal(b.status, 201, JSON.stringify(b.body));
+
+      const pool = require("../db").getPool();
+      const { rows } = await pool.query(
+        `SELECT email, phone_number, age_range, province, primary_language, consent_checkbox
          FROM waitlist_applications WHERE id = $1`,
-      [a.body.applicant_id]
-    );
-    assert.equal(rows[0].email, `simplified-${stamp}-1@example.com`);
-    assert.equal(rows[0].phone_number, "", "no placeholder phone number");
-    assert.equal(rows[0].age_range, "Not specified");
-    assert.equal(rows[0].province, "Not specified");
-    assert.equal(rows[0].primary_language, "Not specified");
-    assert.equal(rows[0].consent_checkbox, true);
-  });
-
-  it("silently accepts honeypot spam payload", async () => {
-    const res = await request("POST", "/api/waitlist", {
-      honeypot: "bot-filled",
+        [a.body.applicant_id]
+      );
+      assert.equal(rows[0].email, `simplified-${stamp}-1@example.com`);
+      assert.equal(rows[0].phone_number, "", "no placeholder phone number");
+      assert.equal(rows[0].age_range, "Not specified");
+      assert.equal(rows[0].province, "Not specified");
+      assert.equal(rows[0].primary_language, "Not specified");
+      assert.equal(rows[0].consent_checkbox, true);
     });
-    assert.equal(res.status, 202);
-    assert.equal(res.body.ok, true);
-  });
-});
+
+    it("silently accepts honeypot spam payload", async () => {
+      const res = await request("POST", "/api/waitlist", {
+        honeypot: "bot-filled",
+      });
+      assert.equal(res.status, 202);
+      assert.equal(res.body.ok, true);
+    });
+  }
+);

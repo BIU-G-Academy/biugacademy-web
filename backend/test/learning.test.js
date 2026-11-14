@@ -7,6 +7,21 @@ const crypto = require("crypto");
 const express = require("express");
 const { createLearningRouter } = require("../learning/http");
 const { createMemoryStore } = require("../learning/memory-store");
+const { createPgStore } = require("../learning/pg-store");
+
+// LEARNING_TEST_STORE=pg runs every test below against the PostgreSQL store
+// (production path) instead of the in-memory store. Set by
+// test/learning-pg.test.js; requires DATABASE_URL with migrations applied.
+const USE_PG = process.env.LEARNING_TEST_STORE === "pg";
+const ACADEMY_TABLES =
+  "academy_badges_earned, academy_progress, academy_cohort_courses, academy_memberships, academy_cohorts, academy_sessions, academy_accounts";
+
+async function freshStore() {
+  if (!USE_PG) return createMemoryStore();
+  const pool = require("../db").getPool();
+  await pool.query(`TRUNCATE ${ACADEMY_TABLES} CASCADE`);
+  return createPgStore(pool);
+}
 const { hashPassword } = require("../learning/passwords");
 const { getCourse } = require("../learning/catalog");
 
@@ -60,7 +75,7 @@ function request(server, method, requestPath, { body, cookie, clientHeader = tru
 }
 
 async function start(env, extra = {}) {
-  const store = extra.store || createMemoryStore();
+  const store = extra.store || (await freshStore());
   const app = express();
   app.use(express.json({ limit: "64kb" }));
   app.use(
@@ -111,6 +126,7 @@ async function login(server, loginName) {
 
 after(async () => {
   await Promise.all(servers.map((server) => new Promise((resolve) => server.close(resolve))));
+  if (USE_PG) await require("../db").getPool().end();
 });
 
 describe("auth, RBAC, and cohort isolation", { concurrency: 1 }, () => {

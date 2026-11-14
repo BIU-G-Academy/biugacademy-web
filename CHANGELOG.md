@@ -48,6 +48,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - PR #6 reconciled with the merged #7 baseline: applications remain closed and the navigation-only script does not collect or submit form data; the Worker remains an undeployed implementation candidate
 - Intake Worker tests: browser suite rewritten for the closed public site (headless Chrome, 7 checks); original form-flow suite preserved under `intake-worker/test/legacy/`; `npm test` now includes the closed-site guard; new `Intake worker` CI workflow (audit, unit, closed-site, e2e, browser)
 - Intake Worker dev dependencies: `wrangler` 4.156.0, `puppeteer-core` 25.16.0 (npm audit 12 findings → 0)
+- Learning MVP from PR #9 (sessions, roles, cohorts, progress, badges) rebased onto the merged #7/#10 baseline: intake endpoints stay hard-closed by `learning/gates.js`; #10's intake persistence tests moved to `backend/test/intake-persistence.test.js` (gate opened in the test process only); the learning suite now also runs against the PostgreSQL store (`backend/test/learning-pg.test.js`)
 - `POST /api/waitlist` and `POST /api/support` fail closed and do not persist personal data. Public copy remains "As candidaturas ainda não estão abertas." / "Applications are not open yet."
 
 - `README.md`, `ROADMAP.md`, `CONTRIBUTING.md`, `GOVERNANCE.md`, `SECURITY.md` — institutional upgrade
