@@ -1,0 +1,26 @@
+# npm run test:unit
+# commit: 10d22ef | 2026-11-14T08:53Z | macOS 15.8.1, Node v24.22.1, wrangler 4.156.0, Chrome 157.0.8103.52
+
+✔ valid application passes and is minimised (3.200756ms)
+✔ unknown fields are dropped (data minimisation) (1.178145ms)
+✔ missing consent is rejected (2.289023ms)
+✔ stale consent version is rejected (0.292386ms)
+✔ 16-17 requires guardian consent (0.327138ms)
+✔ at least one contact channel is required (0.287731ms)
+✔ enum and format violations are reported per field (0.375596ms)
+✔ phone normalisation (0.233574ms)
+✔ referral sanitiser keeps hostname or short tag only (0.348168ms)
+✔ honeypot detection (0.366299ms)
+✔ support and privacy-request validation (0.58459ms)
+✔ AES-GCM round trip; ciphertext is randomised and tamper-evident (26.143278ms)
+✔ keyed hash is deterministic per key and does not reveal input (2.583228ms)
+✔ timingSafeEqual and references (0.806071ms)
+✔ Cloudflare Access JWT verification (RS256) (196.339707ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 405.693626

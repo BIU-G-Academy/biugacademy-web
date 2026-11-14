@@ -95,11 +95,12 @@ Experimental FastAPI/SQLite code may exist for local intake trials. It is **not*
 
 ## Under development
 
-| Component         | Direction                                                |
-| ----------------- | -------------------------------------------------------- |
-| Cohort operations | Manual review workflows documented in `docs/operations/` |
-| Content packaging | Module outlines in `docs/curriculum/`                    |
-| Documentation CI  | Markdown lint via GitHub Actions (optional)              |
+| Component         | Direction                                                                                                                                                           |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cohort operations | Manual review workflows documented in `docs/operations/`                                                                                                            |
+| Learning MVP      | Server sessions, RBAC, cohorts, and local exercises in `backend/learning/`. Not operational. See [docs/operations/learning-mvp.md](docs/operations/learning-mvp.md) |
+| Content packaging | Module outlines in `docs/curriculum/`                                                                                                                               |
+| Documentation CI  | Markdown lint via GitHub Actions (optional)                                                                                                                         |
 
 ---
 
@@ -123,7 +124,7 @@ A future content management layer would support:
 | Facilitators | Cohort management               |
 | Admins       | Admissions, reporting           |
 
-Planned properties: HTTPS-only, role-based access, no shared credentials, secrets outside the repository.
+A non-production learning slice now implements HTTP-only cookie sessions and server-side roles for learner, instructor, and admin. It is not the live site. Real account provisioning and CubeShackles SSO are not configured. Planned properties that remain: production HTTPS-only hosting, no shared credentials, and secrets outside the repository.
 
 ### Offline-first learning (planned)
 
