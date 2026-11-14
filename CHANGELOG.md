@@ -21,7 +21,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - First-party intake (D-015): `intake-worker/` Cloudflare Worker + D1 + Turnstile with encrypted contact fields, retention cron, deletion-request path and token/Access-protected admin export; tests in `intake-worker/test/`
-- Privacy notices in PT/EN/FR (`/pt/privacidade/`, `/en/privacy/`, `/fr/confidentialite/`) with a deletion/access request form
+- Privacy contact pages in PT/EN/FR (`/pt/privacidade/`, `/en/privacy/`, `/fr/confidentialite/`), with no data-entry forms or claims of deployed intake processing
 - `docs/operations/intake-first-party.md` runbook
 
 - Institutional documentation taxonomy: partnerships, governance, metrics, branding, i18n
@@ -39,8 +39,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- Application forms (PT/EN/FR and `/apply/`) reduced to minimal first-stage data with explicit consent and guardian authorisation for ages 16-17; forms fail closed until the intake API is configured
-- Legacy `pt|en|fr/waitlist.html` pages that posted to FormSubmit now redirect to the current forms
+- PR #6 reconciled with the merged #7 baseline: applications remain closed and the navigation-only script does not collect or submit form data; the Worker remains an undeployed implementation candidate
+- Legacy `pt|en|fr/waitlist.html` pages that posted to FormSubmit now redirect to the closed application pages
 
 - `README.md`, `ROADMAP.md`, `CONTRIBUTING.md`, `GOVERNANCE.md`, `SECURITY.md` — institutional upgrade
 - Roadmap rephased to Phases 0–6 (website → partnerships)
