@@ -1,0 +1,43 @@
+# BIU.G Academy first-party intake Worker.
+#
+# NOTHING here is deployed by this PR. Production deployment requires the Founder
+# approvals listed in docs/operations/intake-first-party.md (and
+# Intake_Architecture_Decision.md): D1 database creation, secrets, Turnstile widget,
+# and the custom domain intake.biugacademy.org.
+
+name = "biug-academy-intake"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+# No workers.dev URL and no zone route until the Founder approves the custom domain.
+workers_dev = false
+preview_urls = false
+
+# Daily retention purge at 03:15 UTC.
+[triggers]
+crons = ["15 3 * * *"]
+
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[vars]
+ENVIRONMENT = "production"
+ALLOWED_ORIGINS = "https://biugacademy.org,https://www.biugacademy.org"
+TURNSTILE_EXPECTED_HOSTNAMES = "biugacademy.org,www.biugacademy.org"
+RATE_LIMIT_PER_HOUR = "10"
+# ACCESS_TEAM_DOMAIN = "<team>.cloudflareaccess.com"   # set when Cloudflare Access protects /admin/*
+# ACCESS_AUD = "<application audience tag>"
+
+# Secrets (wrangler secret put ...): TURNSTILE_SECRET, DATA_KEY, HASH_KEY, ADMIN_TOKEN
+
+[[d1_databases]]
+binding = "DB"
+database_name = "biug-academy-intake"
+database_id = "00000000-0000-0000-0000-000000000000" # replaced after `wrangler d1 create` (approval A2)
+migrations_dir = "migrations"
+
+# Approval A5 (custom domain). Uncomment only after approval:
+# [[routes]]
+# pattern = "intake.biugacademy.org"
+# custom_domain = true

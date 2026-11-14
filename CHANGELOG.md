@@ -8,6 +8,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Security
 
+- Required CI (`.github/workflows/ci.yml`): backend tests against a disposable PostgreSQL service with migration verification, FastAPI security tests, npm and pip dependency audits, gitleaks full-history secret scan (checksum-pinned binary, redacted output), and CodeQL (JavaScript, Python, Actions). Docs lint now runs on every PR and adds a relative-link check. All actions pinned to commit SHAs
+- GitHub Pages deployment from an allowlisted artifact (`.github/workflows/pages.yml`, `scripts/site/`): only public pages and static assets are published; backend code, migrations, Apps Script, internal docs, configuration and tests are excluded, verified by allowlist tests and a post-deploy check against `biugacademy.org`. Requires the Pages source to be switched to GitHub Actions ([ADR-001](docs/architecture/decisions/ADR-001-pages-allowlist-deployment.md), [cutover runbook](docs/operations/runbooks/pages-allowlist-cutover.md))
+
 - Backend intake no longer fabricates consent or contact data for the legacy simplified payload; consent must be explicitly `true`, and email-only applicants no longer share a placeholder phone number (which also caused false duplicate rejections)
 - `POST /api/waitlist` duplicate responses no longer disclose the existing applicant identifier
 - Email shape check no longer uses a polynomial-backtracking regular expression on untrusted input (CodeQL `js/polynomial-redos`)
@@ -16,9 +19,17 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Public pages no longer scroll horizontally on small phones: the header (brand, PT/EN/FR switcher, menu) overflowed at 360px and 320px on every page
 - Backend test harness: API suite applies the real migrations instead of the missing `ensureSchema`, skips explicitly without `DATABASE_URL` (fails when `REQUIRE_DATABASE_TESTS=1`), and no longer embeds a fallback database connection string; `npm test` works on Node 22+
 
 ### Added
+
+- First-party intake (D-015): `intake-worker/` Cloudflare Worker + D1 + Turnstile with encrypted contact fields, retention cron, deletion-request path and token/Access-protected admin export; tests in `intake-worker/test/`
+- Privacy contact pages in PT/EN/FR (`/pt/privacidade/`, `/en/privacy/`, `/fr/confidentialite/`), with no data-entry forms or claims of deployed intake processing
+- `docs/operations/intake-first-party.md` runbook
+- Learning MVP under development, not operational: server sessions, learner/instructor/admin authorization, cohorts, assignments, progress, two earned badges, and cohort insight (`backend/learning/`, `portal/learn/`)
+- CubeShackles adapter inventory that stays non-callable (`backend/cubeshackles/adapters.js`, `docs/operations/learning-mvp.md`)
+- Forward migration `backend/migrations/004_academy_learning.sql` and an unapplied rollback script in `backend/rollback/`
 
 - Institutional documentation taxonomy: partnerships, governance, metrics, branding, i18n
 - Root `ARCHITECTURE.md` with system overview and Mermaid diagrams
@@ -34,6 +45,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `docs/operations/backend-deployment.md` — API production deployment guide
 
 ### Changed
+
+- PR #6 reconciled with the merged #7 baseline: applications remain closed and the navigation-only script does not collect or submit form data; the Worker remains an undeployed implementation candidate
+- Intake Worker tests: browser suite rewritten for the closed public site (headless Chrome, 7 checks); original form-flow suite preserved under `intake-worker/test/legacy/`; `npm test` now includes the closed-site guard; new `Intake worker` CI workflow (audit, unit, closed-site, e2e, browser)
+- Intake Worker dev dependencies: `wrangler` 4.156.0, `puppeteer-core` 25.16.0 (npm audit 12 findings → 0)
+- Learning MVP from PR #9 (sessions, roles, cohorts, progress, badges) rebased onto the merged #7/#10 baseline: intake endpoints stay hard-closed by `learning/gates.js`; #10's intake persistence tests moved to `backend/test/intake-persistence.test.js` (gate opened in the test process only); the learning suite now also runs against the PostgreSQL store (`backend/test/learning-pg.test.js`)
+- `POST /api/waitlist` and `POST /api/support` fail closed and do not persist personal data. Public copy remains "As candidaturas ainda não estão abertas." / "Applications are not open yet."
 
 - `README.md`, `ROADMAP.md`, `CONTRIBUTING.md`, `GOVERNANCE.md`, `SECURITY.md` — institutional upgrade
 - Roadmap rephased to Phases 0–6 (website → partnerships)
