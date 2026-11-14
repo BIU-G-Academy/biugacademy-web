@@ -1,7 +1,8 @@
-PASS | B1 fail-closed when intake is not configured: nothing is sent
-PASS | B2 happy path (PT): Turnstile token, POST to Worker, redirect, row stored
-PASS | B3 client-side: no contact -> message, no POST
-PASS | B4 minor: guardian checkbox appears and is required
-PASS | B5 server rejection (Turnstile fails server-side) shows error, stays on page
-PASS | B6 privacy page: deletion request accepted with reference
-PASS | B7 legacy FormSubmit pages now redirect (no third-party form left)
+PASS | B0 closure pages discovered (17) in PT, EN and FR
+PASS | B1 every closure page renders with no form controls and the closure notice in its language
+PASS | B2 primary application pages declare the right language
+PASS | B3 clicking every button on the application pages sends nothing
+PASS | B4 privacy pages: right language, contact route, no form controls, linked from the application page
+PASS | B5 site HTML references no intake wiring (Turnstile, intake form, API base)
+PASS | B6 mobile 360px: no horizontal overflow on application and privacy pages
+external hosts requested (aborted): fonts.googleapis.com
