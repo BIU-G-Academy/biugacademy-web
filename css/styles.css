@@ -246,6 +246,42 @@ a:hover {
   }
 }
 
+/* Small phones: the header row (brand, PT/EN/FR switcher, menu button) is
+   wider than 360px with the default gaps and padding, which made every page
+   scroll horizontally. Tighten spacing only below 400px. */
+@media (max-width: 400px) {
+  .site-nav .inner {
+    gap: 0.5rem;
+    padding: 0 0.9rem;
+  }
+
+  .lang-switcher,
+  .language-switcher {
+    gap: 0.2rem;
+  }
+}
+
+/* Smallest phones (320px): keep the brand text but shrink it slightly. */
+@media (max-width: 340px) {
+  .site-nav .inner {
+    gap: 0.4rem;
+    padding: 0 0.6rem;
+  }
+
+  .brand img {
+    width: 30px;
+    height: auto;
+  }
+
+  .brand-text {
+    font-size: 0.98rem;
+  }
+
+  .nav-toggle {
+    padding: 0.3rem 0.45rem;
+  }
+}
+
 .hero {
   position: relative;
   background:
