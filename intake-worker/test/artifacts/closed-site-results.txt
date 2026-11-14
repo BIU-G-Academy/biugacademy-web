@@ -1,0 +1,19 @@
+# npm run test:closed
+# commit: 10d22ef | 2026-11-14T08:53Z | macOS 15.8.1, Node v24.22.1, wrangler 4.156.0, Chrome 157.0.8103.52
+
+✔ pt/privacidade/index.html does not expose an intake or privacy submission form (2.588954ms)
+✔ en/privacy/index.html does not expose an intake or privacy submission form (2.039704ms)
+✔ fr/confidentialite/index.html does not expose an intake or privacy submission form (0.897153ms)
+✔ pt/entrar-primeira-turma/index.html does not expose an intake or privacy submission form (0.81225ms)
+✔ en/waitlist/index.html does not expose an intake or privacy submission form (0.754621ms)
+✔ fr/rejoindre-premiere-cohorte/index.html does not expose an intake or privacy submission form (0.830925ms)
+✔ apply/index.html does not expose an intake or privacy submission form (0.802496ms)
+✔ privacy pages retain an explicit contact route (0.790898ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 186.768165
