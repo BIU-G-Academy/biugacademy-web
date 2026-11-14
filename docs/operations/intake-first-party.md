@@ -38,19 +38,24 @@ The Worker candidate implements proposed periods of 12 months for applications, 
 
 ## Verification scope
 
-From the repository root:
+From `intake-worker/` (see its README for what each suite proves):
 
 ```bash
-node --test intake-worker/test/closed-site.test.mjs
-node --test intake-worker/test/unit.test.mjs
+npm ci
+npm run test:unit        # validation, crypto
+npm run test:closed      # source-level closure guard
+npm run test:e2e         # Worker in workerd + local D1
+CHROME_PATH=<chrome> npm run test:browser   # closed site in headless Chrome
 ```
 
-The closure guard checks the public application/privacy pages for data-entry controls and preserves the email contact route. It is a source-level guard, not browser or hosted proof.
+CI runs all four plus a dependency audit on every pull request (`.github/workflows/intake-worker.yml`).
 
-The existing Worker E2E suite uses workerd/local D1; the existing browser suite targets the former intake forms. Historical output under `intake-worker/test/artifacts/` is retained unchanged. Those results predate the current branch integration and do not establish current acceptance. The browser suite needs a reviewed scope change or restored, approved integration before it can demonstrate reopening readiness; no failing assertion has been removed.
+The browser suite now tests the **closed** site in a real browser: no form controls, no non-GET or third-party requests, the closure notice in each language, privacy-page links, and no horizontal overflow at 360px. It is browser proof of the local checkout, not hosted proof; hosted verification follows the Pages allowlist cutover (PR #11).
+
+The original form-flow browser test is preserved unchanged, with all of its assertions, as `intake-worker/test/legacy/browser-intake-forms.e2e.mjs`. It is not run while the site has no intake forms. Reopening requires restoring an approved intake UI and making that suite pass again. No assertion has been deleted.
 
 ## Rollback and preservation
 
-The reconciliation changes only static privacy pages, documentation and a closure regression test. It changes no Worker logic, schema, credentials, provider resources or database records. Revert the reconciliation commit to restore its prior source state if necessary; doing so would also restore the unhandled privacy forms and must not be treated as approval to publish them.
+The reconciliation changes static privacy pages, a small-screen header fix in `css/styles.css`, documentation, tests, CI and dev-dependency versions. It changes no Worker logic, schema, credentials, provider resources or database records. Revert the reconciliation commit to restore its prior source state if necessary; doing so would also restore the unhandled privacy forms and must not be treated as approval to publish them.
 
 Any future backend deployment needs its own tested rollback and recovery plan. Preserve this branch and the historical implementation until its controls are adopted or explicitly retired.

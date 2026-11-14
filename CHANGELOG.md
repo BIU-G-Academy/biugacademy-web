@@ -16,6 +16,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Public pages no longer scroll horizontally on small phones: the header (brand, PT/EN/FR switcher, menu) overflowed at 360px and 320px on every page
 - Backend test harness: API suite applies the real migrations instead of the missing `ensureSchema`, skips explicitly without `DATABASE_URL` (fails when `REQUIRE_DATABASE_TESTS=1`), and no longer embeds a fallback database connection string; `npm test` works on Node 22+
 
 ### Added
@@ -40,7 +41,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - PR #6 reconciled with the merged #7 baseline: applications remain closed and the navigation-only script does not collect or submit form data; the Worker remains an undeployed implementation candidate
-- Legacy `pt|en|fr/waitlist.html` pages that posted to FormSubmit now redirect to the closed application pages
+- Intake Worker tests: browser suite rewritten for the closed public site (headless Chrome, 7 checks); original form-flow suite preserved under `intake-worker/test/legacy/`; `npm test` now includes the closed-site guard; new `Intake worker` CI workflow (audit, unit, closed-site, e2e, browser)
+- Intake Worker dev dependencies: `wrangler` 4.156.0, `puppeteer-core` 25.16.0 (npm audit 12 findings → 0)
 
 - `README.md`, `ROADMAP.md`, `CONTRIBUTING.md`, `GOVERNANCE.md`, `SECURITY.md` — institutional upgrade
 - Roadmap rephased to Phases 0–6 (website → partnerships)

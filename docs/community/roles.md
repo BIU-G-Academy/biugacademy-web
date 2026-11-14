@@ -26,4 +26,4 @@ Contributors must not present themselves as accredited faculty, government offic
 ## Related documents
 
 - [contributor-onboarding.md](contributor-onboarding.md)
-- [moderation-guidelines.md](moderation-guidelines.md)
+- [Code of Conduct](../../CODE_OF_CONDUCT.md) (dedicated moderation guidelines are not written yet)
