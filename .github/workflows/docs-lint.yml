@@ -1,17 +1,13 @@
 name: Docs lint
 
+# Runs on every pull request (no path filter) so these checks can be marked
+# required in branch protection. A path-filtered required check never reports
+# on unrelated PRs and blocks them.
 on:
   push:
     branches: [main]
-    paths:
-      - "**/*.md"
-      - ".markdownlint.json"
-      - ".github/workflows/docs-lint.yml"
   pull_request:
     branches: [main]
-    paths:
-      - "**/*.md"
-      - ".markdownlint.json"
 
 permissions:
   contents: read
@@ -20,9 +16,9 @@ jobs:
   markdownlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Markdown lint
-        uses: DavidAnson/markdownlint-cli2-action@v18
+        uses: DavidAnson/markdownlint-cli2-action@eb5ca3ab411449c66620fe7f1b3c9e10547144b0 # v18.0.0
         with:
           config: .markdownlint.json
           globs: |
@@ -32,8 +28,20 @@ jobs:
   prettier-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: "20"
+          node-version: "22"
       - run: npx --yes prettier@3.5.3 --check "**/*.{md,html,css,js,yml,yaml}" --ignore-path .prettierignore
+
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+      - name: Link checker tests
+        run: node --test "scripts/ci/test/*.test.mjs"
+      - name: Relative Markdown links resolve
+        run: node scripts/ci/check-md-links.mjs

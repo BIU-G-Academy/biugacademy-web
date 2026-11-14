@@ -1,0 +1,86 @@
+{
+  "$comment": "Allowlist for the public GitHub Pages artifact. Only git-tracked files that match rootFiles, or that live under directories AND have an allowed extension, are published. Everything else in the repository (backend, scripts, migrations, configuration, internal documentation, tests) stays out. Changing this file changes what is public: it requires CODEOWNERS review. See docs/architecture/decisions/ADR-001-pages-allowlist-deployment.md.",
+  "rootFiles": [
+    "index.html",
+    "about.html",
+    "how-it-works.html",
+    "thank-you.html",
+    "waitlist.html",
+    "CNAME",
+    "robots.txt",
+    "sitemap.xml",
+    "favicon.ico"
+  ],
+  "directories": [
+    "pt",
+    "en",
+    "fr",
+    "about",
+    "apply",
+    "contact",
+    "how",
+    "platform",
+    "programs",
+    "thank-you",
+    "waitlist",
+    "portal",
+    "css",
+    "js",
+    "assets"
+  ],
+  "extensions": [
+    ".html",
+    ".css",
+    ".js",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".svg",
+    ".webp",
+    ".gif",
+    ".ico",
+    ".woff",
+    ".woff2",
+    ".webmanifest"
+  ],
+  "required": [
+    "index.html",
+    "CNAME",
+    "pt/index.html",
+    "en/index.html",
+    "fr/index.html",
+    "css/styles.css",
+    "js/script.js",
+    "assets"
+  ],
+  "forbiddenSegments": [
+    "backend",
+    "google-apps-script",
+    "intake-worker",
+    "docs",
+    "templates",
+    "scripts",
+    "test",
+    "tests",
+    "tests_py",
+    "migrations",
+    "rollback",
+    "node_modules",
+    ".github",
+    ".git"
+  ],
+  "forbiddenNamePatterns": [
+    "\\.(md|sql|py|gs|json|lock|toml|ya?ml|sh|ts|map|example|env|pem|key|txt)$",
+    "^\\.env",
+    "^\\.",
+    "^(AGENTS|CODEOWNERS|LICENSE|Dockerfile|Makefile)$"
+  ],
+  "forbiddenNameExceptions": ["robots.txt"],
+  "forbiddenContentPatterns": [
+    "-----BEGIN [A-Z ]*PRIVATE KEY-----",
+    "postgres(ql)?://[^\\s:@/]+:[^\\s@/]+@",
+    "\\bsk-[A-Za-z0-9]{20,}",
+    "\\bre_[A-Za-z0-9]{20,}",
+    "\\bghp_[A-Za-z0-9]{30,}"
+  ]
+}
