@@ -50,7 +50,7 @@ Core principles:
 
 ## Data elements and sensitivity
 
-Intake currently stores contact and profile fields relevant to educational cohort selection.
+Public applications are closed under the #7 baseline. Contact and profile storage described here is a requirement for a future approved intake system, not a claim of current collection.
 
 Sensitive handling expectations:
 
@@ -60,7 +60,7 @@ Sensitive handling expectations:
 
 ## Retention preparation
 
-Retention policy is under development. Proposed direction:
+Proposed Worker retention is described in [../operations/intake-first-party.md](../operations/intake-first-party.md#retention) (applications 12 months, support 6 months, privacy-request records 24 months). General direction for other records:
 
 - Keep active intake records for cohort cycles
 - Archive or delete stale records based on operational need and legal guidance
@@ -84,7 +84,7 @@ Future operational policy should define:
 - Contact channel for deletion requests
 - Response timelines for data requests
 
-## Operational controls
+## Required controls before operation
 
 - Rate-limited API endpoints
 - Honeypot and duplicate controls

@@ -28,13 +28,13 @@ Institutional documentation for inspectors, partners, and contributors. All docu
 
 ## Start here by audience
 
-| Audience            | Read first                                                                                                                                                                       |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Regulators          | [regulatory/regulatory-position.md](regulatory/regulatory-position.md), [whitepaper/biug-academy-whitepaper-v1.md](whitepaper/biug-academy-whitepaper-v1.md)                     |
-| NGOs / universities | [partnerships/partnership-framework.md](partnerships/partnership-framework.md), [governance/transparency-policy.md](governance/transparency-policy.md)                           |
-| Developers          | [../ARCHITECTURE.md](../ARCHITECTURE.md), [operations/deployment-guide.md](operations/deployment-guide.md), [operations/backend-deployment.md](operations/backend-deployment.md) |
-| Contributors        | [../CONTRIBUTING.md](../CONTRIBUTING.md), [community/contributor-onboarding.md](community/contributor-onboarding.md)                                                             |
-| Donors (future)     | [governance/transparency-policy.md](governance/transparency-policy.md), [metrics/outcomes-framework.md](metrics/outcomes-framework.md)                                           |
+| Audience            | Read first                                                                                                                                                                                                                                             |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Regulators          | [regulatory/regulatory-position.md](regulatory/regulatory-position.md), [whitepaper/biug-academy-whitepaper-v1.md](whitepaper/biug-academy-whitepaper-v1.md)                                                                                           |
+| NGOs / universities | [partnerships/partnership-framework.md](partnerships/partnership-framework.md), [governance/transparency-policy.md](governance/transparency-policy.md)                                                                                                 |
+| Developers          | [../ARCHITECTURE.md](../ARCHITECTURE.md), [operations/deployment-guide.md](operations/deployment-guide.md), [operations/backend-deployment.md](operations/backend-deployment.md), [operations/intake-first-party.md](operations/intake-first-party.md) |
+| Contributors        | [../CONTRIBUTING.md](../CONTRIBUTING.md), [community/contributor-onboarding.md](community/contributor-onboarding.md)                                                                                                                                   |
+| Donors (future)     | [governance/transparency-policy.md](governance/transparency-policy.md), [metrics/outcomes-framework.md](metrics/outcomes-framework.md)                                                                                                                 |
 
 ---
 

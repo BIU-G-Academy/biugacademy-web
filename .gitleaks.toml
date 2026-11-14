@@ -1,0 +1,32 @@
+# gitleaks configuration: default rules plus repository-specific rules.
+# Findings are always printed redacted (--redact). Accepted historical
+# findings go in .gitleaksignore by fingerprint only, with a reference to
+# docs/security/credential-exposure-review.md. Never add secret values here.
+
+title = "biugacademy-web"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "postgres-uri-with-password"
+description = "PostgreSQL connection string with an inline password"
+regex = '''postgres(?:ql)?://[^\s:@/'"`]+:([^\s@/'"`]+)@[^\s'"`]+'''
+secretGroup = 1
+keywords = ["postgres://", "postgresql://"]
+
+[[rules]]
+id = "resend-api-key"
+description = "Resend API key"
+regex = '''\bre_[A-Za-z0-9_]{20,}\b'''
+keywords = ["re_"]
+
+[allowlist]
+description = "Known non-secrets: the disposable CI database defined in ci.yml, <user>:<password> documentation placeholders, and the fake fixture in the Pages allowlist tests"
+# Match against the whole finding, not only the captured secret group.
+regexTarget = "match"
+regexes = [
+  '''postgresql://ci:ci-disposable@127\.0\.0\.1:5432/biug_ci''',
+  '''postgres(?:ql)?://<[^>]+>:<[^>]+>@''',
+  '''postgresql://user:pw@db/x''',
+]
