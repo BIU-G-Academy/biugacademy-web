@@ -11,6 +11,24 @@ import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+// Transport-level retry for the local workerd dev server. A reused keep-alive
+// socket is occasionally reset by `wrangler dev` (observed: 1 ECONNRESET in 3
+// local runs on wrangler 4.156.0). Only socket errors are retried, at most
+// twice; HTTP statuses and assertions are never retried. Request bodies in
+// this file are strings, so a retry re-sends the same request.
+const RETRYABLE = new Set(["ECONNRESET", "EPIPE", "UND_ERR_SOCKET"]);
+const nativeFetch = globalThis.fetch;
+globalThis.fetch = async (url, init) => {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await nativeFetch(url, init);
+    } catch (error) {
+      if (attempt >= 2 || !RETRYABLE.has(error?.cause?.code)) throw error;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+  }
+};
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // wrangler's local HTTPS uses a self-signed cert
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");

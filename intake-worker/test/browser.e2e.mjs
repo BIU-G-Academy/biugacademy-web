@@ -211,7 +211,7 @@ try {
       ]);
       assert.ok(scroll <= client + 1, `${path}: scrollWidth ${scroll} > clientWidth ${client}`);
       if (path === "pt/entrar-primeira-turma/" || path === "pt/privacidade/") {
-        await page.screenshot({ path: join(ART, `mobile-${path.replace(/\//g, "_")}png`), fullPage: true });
+        await page.screenshot({ path: join(ART, `mobile-${path.replace(/\/$/, "").replace(/\//g, "_")}.png`), fullPage: true });
       }
       await page.close();
     }
