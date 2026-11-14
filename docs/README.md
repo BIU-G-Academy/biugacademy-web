@@ -44,15 +44,16 @@ Institutional documentation for inspectors, partners, and contributors. All docu
 
 ## Governance and assurance
 
-| Document                                                                                     | Purpose                                                      |
-| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| [governance/pr-reconciliation-register.md](governance/pr-reconciliation-register.md)         | Every open PR: overlap, risk, evidence, disposition          |
-| [architecture/decisions/README.md](architecture/decisions/README.md)                         | ADR index and statuses                                       |
-| [releases/release-gate-report-2026-11-13.md](releases/release-gate-report-2026-11-13.md)     | Baseline test evidence and G0–G4 gate status                 |
-| [security/credential-exposure-review.md](security/credential-exposure-review.md)             | Credential exposure findings and rotation inventory          |
-| [security/controls/branch-protection.md](security/controls/branch-protection.md)             | Required checks and `main` protection settings               |
-| [governance/documentation-ownership-matrix.md](governance/documentation-ownership-matrix.md) | Owner, target location and review cadence for every document |
-| [governance/documentation-migration-plan.md](governance/documentation-migration-plan.md)     | Canonical taxonomy migration batches and supersession log    |
+| Document                                                                                     | Purpose                                                                  |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [releases/production-freeze-2026-11-14.md](releases/production-freeze-2026-11-14.md)         | Active production freeze: merge train, evidence, rollback, exit criteria |
+| [governance/pr-reconciliation-register.md](governance/pr-reconciliation-register.md)         | Every open PR: overlap, risk, evidence, disposition                      |
+| [architecture/decisions/README.md](architecture/decisions/README.md)                         | ADR index and statuses                                                   |
+| [releases/release-gate-report-2026-11-13.md](releases/release-gate-report-2026-11-13.md)     | Baseline test evidence and G0–G4 gate status                             |
+| [security/credential-exposure-review.md](security/credential-exposure-review.md)             | Credential exposure findings and rotation inventory                      |
+| [security/controls/branch-protection.md](security/controls/branch-protection.md)             | Required checks and `main` protection settings                           |
+| [governance/documentation-ownership-matrix.md](governance/documentation-ownership-matrix.md) | Owner, target location and review cadence for every document             |
+| [governance/documentation-migration-plan.md](governance/documentation-migration-plan.md)     | Canonical taxonomy migration batches and supersession log                |
 
 The canonical taxonomy is defined in [ADR-009](architecture/decisions/ADR-009-documentation-taxonomy.md). Existing documents move in batches after open PRs are reconciled.
 

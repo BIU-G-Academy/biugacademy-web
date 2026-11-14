@@ -3,7 +3,7 @@
 | Field         | Value                                                                                                                                                                     |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Owner         | @biu-gholdings                                                                                                                                                            |
-| Status        | **Baseline**: G0 not met                                                                                                                                                  |
+| Status        | **Baseline**: G0 not met. Superseded for current status by the [production freeze record](production-freeze-2026-11-14.md)                                                |
 | Version       | 1.0                                                                                                                                                                       |
 | Last reviewed | 2026-11-13                                                                                                                                                                |
 | Related       | [register](../governance/pr-reconciliation-register.md), [ADR index](../architecture/decisions/README.md), [credential review](../security/credential-exposure-review.md) |

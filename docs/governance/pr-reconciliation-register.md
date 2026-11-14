@@ -19,17 +19,21 @@ No PRs had been opened since the 2026-11-13 audit. PRs #10 to #12 were opened by
 
 ## Summary matrix
 
-| PR  | Owner / author               | Objective                                            | Head      | Recommended disposition                                                                      | Final disposition                                                      |
-| --- | ---------------------------- | ---------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| #4  | fabiogmassanga               | Forms fail closed without a configured API           | `53a254d` | **Supersede by #7** once #7 merges; carry `apiIsConfigured` into reopened intake             | Pending approval                                                       |
-| #5  | fabiogmassanga (atlas)       | Interim FormSubmit relay for applications            | `9c4ab7e` | **Retire** once the first-party replacement is verified; do not merge                        | Pending approval                                                       |
-| #6  | fabiogmassanga (atlas)       | First-party privacy-preserving intake (Worker + D1)  | `c792493` | **Port** privacy and intake controls into Express (ADR-002, ADR-005); keep open as reference | Pending approval                                                       |
-| #7  | fabiogmassanga (cursoragent) | Close application forms (founder directive)          | `7b4a0b4` | **Merge first** (intake-closure baseline)                                                    | **Merged** 2026-11-13 as `ecbbc11` (merge commit; 6 commits preserved) |
-| #8  | fabiogmassanga (cursoragent) | Delete `backend/` and Apps Script from the site root | `39180fb` | **Supersede by #11** (allowlist deployment); do not merge                                    | Pending approval                                                       |
-| #9  | fabiogmassanga (cursoragent) | Learning MVP: sessions, roles, cohorts, progress     | `edbf8ac` | **Rebase and harden** on the consolidated foundation as a new PR                             | Pending approval                                                       |
-| #10 | this workstream              | Backend test harness and intake security defects     | `dba6f31` | Merge next (rebased on `ecbbc11`; restores the repaired `api.test.js`)                       | Open, draft                                                            |
-| #11 | this workstream              | Pages allowlist deployment (ADR-001)                 | `7ea6754` | Merge, then the founder-authorized cutover                                                   | Open, draft                                                            |
-| #12 | this workstream              | Required CI checks (stacked on #10)                  | `11b6e0d` | Merge after #10; then require its checks                                                     | Open, draft                                                            |
+Status as of **2026-11-14** (production freeze). `main` = `d20a948`.
+
+| PR  | Owner / author                           | Objective                                         | Head      | Disposition                                                 | Final disposition                                               |
+| --- | ---------------------------------------- | ------------------------------------------------- | --------- | ----------------------------------------------------------- | --------------------------------------------------------------- |
+| #4  | fabiogmassanga                           | Forms fail closed without a configured API        | `e908177` | Supersede by #7                                             | **Closed** 2026-11-13 17:19 UTC, superseded by #7               |
+| #5  | fabiogmassanga (atlas)                   | Interim FormSubmit relay                          | `9c4ab7e` | Retire (third-party relay of personal data)                 | **Closed** 2026-11-13 18:12 UTC by the founder, unmerged        |
+| #6  | fabiogmassanga (atlas)                   | Worker intake candidate, privacy pages, phone fix | `b5f5a94` | **Merge: train 1/5**                                        | Open, ready                                                     |
+| #7  | fabiogmassanga (cursoragent)             | Close application forms                           | `7b4a0b4` | Merge                                                       | **Merged** 2026-11-13 as `ecbbc11`                              |
+| #8  | fabiogmassanga (cursoragent)             | Delete `backend/` from the site root              | `39180fb` | Supersede by #11; close after cutover verification          | Open, pending approval to close                                 |
+| #9  | fabiogmassanga (cursoragent)             | Learning MVP                                      | `edbf8ac` | Supersede by #14 (same commits, rebased, provenance kept)   | Open, pending approval to close                                 |
+| #10 | this workstream                          | Backend harness and intake security defects       | `dba6f31` | Merge                                                       | **Merged** 2026-11-13 as `d20a948` (with founder fix `11c4ad1`) |
+| #12 | this workstream                          | Required CI                                       | `db914a0` | **Merge: train 2/5**, after the C1 decision                 | Open, draft                                                     |
+| #14 | Cursor Agent (from #9) + this workstream | Learning MVP, rebased and PostgreSQL-tested       | `093116b` | **Merge: train 3/5**                                        | Open                                                            |
+| #11 | this workstream                          | Pages allowlist deployment (ADR-001)              | `151950e` | **Merge: train 4/5**, then founder-authorized Pages cutover | Open, draft                                                     |
+| #13 | this workstream                          | Governance, register, freeze record               | (this PR) | **Merge: train 5/5**                                        | Open, draft                                                     |
 
 ## Overlap and conflict map
 
@@ -145,6 +149,16 @@ PRs #10 and #12 overlap with #7, #8 and #9 on `backend/`. PR #11 has no file ove
 | Evidence    | Local and CI: `site-artifact` passes (13/13 allowlist tests; 58-file artifact). Live verifier pre-cutover: 111 excluded files reachable (the expected failure, recorded as the baseline) |
 | Disposition | Merge, then the founder-authorized cutover (runbook `docs/operations/runbooks/pages-allowlist-cutover.md`, delivered in #11). G0 is met only when `verify-live` passes on the domain     |
 
+### #14: feat(learning): learning MVP (supersedes #9)
+
+| Field       | Record                                                                                                                                                                                                                              |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Head        | `093116b`, stacked on #12                                                                                                                                                                                                           |
+| Provenance  | #9's commits `4229bcc` and `edbf8ac` cherry-picked with `-x`, authorship Cursor Agent; `git range-diff` shows the code identical; only `CHANGELOG.md`, `docs/README.md` and `requirements-dev.txt` differ                           |
+| Additions   | PostgreSQL-store run of the learning suite (it previously ran only in memory); #10's intake persistence tests preserved behind a test-only gate; `noindex` on all portal pages (found by the browser suite on the integrated train) |
+| Evidence    | On the train tip: migrations 001–004, `npm test` 56/56, learning 5/5 on both stores, browser 7/7, `portal/learn/` fails closed on a static host                                                                                     |
+| Disposition | Merge as train step 3; close #9 as superseded                                                                                                                                                                                       |
+
 ### #12: ci: required backend, security and documentation checks
 
 | Field       | Record                                                                                                                                                                                                                                                                                                                                                                                                                   |
@@ -153,18 +167,19 @@ PRs #10 and #12 overlap with #7, #8 and #9 on `backend/`. PR #11 has no file ove
 | Evidence    | CI run 1: backend-tests ✅, fastapi-security ✅, dependency-audit ✅, link-check ✅, markdownlint ✅, prettier-check ✅, CodeQL analyses ✅ (one high alert, fixed in #10). **secret-scan ❌**: 6 redacted findings. 3 were allowlist misconfiguration (fixed in `6c43515`); 3 are the committed local dev database URL, which awaits the decision in the [credential review](../security/credential-exposure-review.md) |
 | Disposition | Merge after #10, then add its checks to branch protection                                                                                                                                                                                                                                                                                                                                                                |
 
-## Recommended merge order
+## Merge train (production freeze)
 
-Every step needs founder approval.
+The open PRs form one linear stack. Each branch contains every PR before it, so each PR's CI tests exactly what `main` becomes when it merges. Simulated sequentially on 2026-11-14: every step merges without conflict.
 
-1. **#7**: intake-closure baseline. **Done**: merged as `ecbbc11`.
-2. **#10**: rebased on #7 (done), keeping the repaired `api.test.js`.
-3. **#12**: required CI, after the secret-scan decision.
-4. **This governance PR**: register, ADRs, credential review, branch-protection guide.
-5. **#11**, then the **Pages cutover** (settings change), then `verify-live` green, then **close #8** as superseded.
-6. **Branch protection** on `main` with the required checks (settings change).
-7. **#9 rebased and hardened** (new PR), then mark #9 superseded.
-8. **#6 privacy/intake port** (new PR), then mark #6 superseded, **close #4** (after #7) and **close #5**.
+| Step | PR  | Merge when                                                                 |
+| ---- | --- | -------------------------------------------------------------------------- |
+| 1    | #6  | Approved                                                                   |
+| 2    | #12 | Approved and C1 decided (`secret-scan` green)                              |
+| 3    | #14 | Approved; then close #9 as superseded                                      |
+| 4    | #11 | Approved; then the Pages source switch, `verify-live` green, then close #8 |
+| 5    | #13 | Approved; then branch protection on `main`                                 |
+
+**Rules:** merge in this order only, each with **"Create a merge commit"**. Squash or rebase merges rewrite SHAs and break the later branches. Details: [production freeze record](../releases/production-freeze-2026-11-14.md).
 
 ## Discovered during Phase 0
 

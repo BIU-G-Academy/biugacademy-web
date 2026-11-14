@@ -11,6 +11,12 @@ Instructions for coding agents (Cursor, Claude Code and others) working in this 
 - **Evidence:** report a test as passing only if you ran it. Say which tests you did not run.
 - Follow the PR checklist in [CONTRIBUTING.md](CONTRIBUTING.md): labels, milestone, CHANGELOG, and docs registered in [docs/README.md](docs/README.md).
 
+## Production freeze (from 2026-11-14)
+
+Only the merge train in [docs/releases/production-freeze-2026-11-14.md](docs/releases/production-freeze-2026-11-14.md) may land on `main`, in order, with merge commits. Do not open feature PRs against `main` until the freeze exits.
+
+**Do not keep this repository in an iCloud-synced folder** (Desktop or Documents with iCloud Drive). iCloud evicted `.git` files and corrupted a local clone on 2026-11-14. Use a non-synced path such as `~/Developer/`.
+
 ## Project overview
 
 BIU.G Academy is an Angola-first technical education initiative (under development). The repository contains:

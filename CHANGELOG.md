@@ -24,6 +24,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Production freeze record (`docs/releases/production-freeze-2026-11-14.md`): merge train #6 → #12 → #14 → #11 → #13, evidence, rollback and exit criteria; register updated with final dispositions of #4, #5, #7 and #10 and the #14 successor to #9
 - First-party intake (D-015): `intake-worker/` Cloudflare Worker + D1 + Turnstile with encrypted contact fields, retention cron, deletion-request path and token/Access-protected admin export; tests in `intake-worker/test/`
 - Privacy contact pages in PT/EN/FR (`/pt/privacidade/`, `/en/privacy/`, `/fr/confidentialite/`), with no data-entry forms or claims of deployed intake processing
 - `docs/operations/intake-first-party.md` runbook
